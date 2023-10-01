@@ -3,6 +3,7 @@ package com.sycomore;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.sycomore.helper.Config;
 import com.sycomore.view.MainWindow;
+import com.sycomore.view.SplashWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +30,9 @@ public class App
                 UIManager.put(key, color);
             }
         }
+
+        SplashWindow splash = new SplashWindow();
+        splash.setVisible(true);
 
         MainWindow mainWindow = new MainWindow();
         mainWindow.setVisible(true);
