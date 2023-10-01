@@ -64,7 +64,7 @@ public class Sidebar extends JPanel {
     public Sidebar addItem (String caption, String icon, String name) {
         SidebarItemModel model = new SidebarItemModel(caption, icon, name);
         SidebarItem item = new SidebarItem(model, this::onAction);
-        container.add(item, "h 80!");
+        container.add(item, "h 90!");
         if (currentItem == null) {
             currentItem = item;
             item.setActive(true);

@@ -7,13 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class SidebarItem extends JComponent {
     private static final Font customFont = new Font("Arial", Font.BOLD, 12);
     private final SidebarItemModel itemModel;
-    private final Image icon;
+    private final BufferedImage icon;
     private final int maxWidth;
     private boolean hovered = false;
     private boolean active = false;
@@ -65,20 +66,19 @@ public class SidebarItem extends JComponent {
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 
         g.setColor(UIManager.getColor("border_color"));
-        if (hovered || active) {
+        if (hovered)
             g.fillRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
-        } else {
+        else
             g.drawRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
-        }
 
-        if (active) {
-            g.setColor(UIManager.getColor("blue_bootstrap"));
-        } else {
-            g.setColor(UIManager.getColor("sidebar_foreground"));
-        }
+        Color c = active ? UIManager.getColor("blue_bootstrap") : UIManager.getColor("sidebar_foreground");
+        g.setColor(c);
 
-        g.drawImage(icon, (getWidth()/2) - 20, 10, 40, 40, null);
-        g.drawString(itemModel.getCaption(), getWidth() / 2 - maxWidth / 2, 65);
+        if (active)
+            g.drawRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
+
+        g.drawImage(icon, (getWidth()/2) - 25, 10, 50, 50, null);
+        g.drawString(itemModel.getCaption(), getWidth() / 2 - maxWidth / 2, 75);
     }
 
     private void repaitRect () {

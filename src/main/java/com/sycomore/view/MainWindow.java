@@ -4,6 +4,7 @@ import com.sycomore.view.componets.Workspace;
 import com.sycomore.view.componets.navigation.SidebarItem;
 import com.sycomore.view.workspace.ControlPanel;
 import com.sycomore.view.workspace.DashboardPanel;
+import com.sycomore.view.workspace.ReportsPanel;
 import com.sycomore.view.workspace.StudentsPanel;
 
 import javax.swing.*;
@@ -41,12 +42,14 @@ public class MainWindow extends JFrame {
     private void init () {
         sidebar.addItem("états", "dashboard.png", "dashboard")
                 .addItem("Élèves", "student.png", "students")
+                .addItem("Rapports", "printing.png", "reports")
                 .addItem("Configuration", "control.png", "control");
 
         sidebar.setItemChangeListener(this::onSidebarItemChange);
 
         workspace.addItem(new DashboardPanel())
                 .addItem(new StudentsPanel())
+                .addItem(new ReportsPanel())
                 .addItem(new ControlPanel());
     }
 }
