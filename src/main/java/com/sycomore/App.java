@@ -31,8 +31,8 @@ public class App
             }
         }
 
-        SplashWindow splash = new SplashWindow();
-        splash.setVisible(true);
+        //SplashWindow splash = new SplashWindow();
+        //splash.setVisible(true);
 
         MainWindow mainWindow = new MainWindow();
         mainWindow.setVisible(true);

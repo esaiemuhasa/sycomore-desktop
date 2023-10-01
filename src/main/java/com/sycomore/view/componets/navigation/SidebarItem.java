@@ -1,5 +1,7 @@
 package com.sycomore.view.componets.navigation;
 
+import com.sun.istack.NotNull;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +18,7 @@ public class SidebarItem extends JComponent {
     private boolean hovered = false;
     private boolean active = false;
 
-    public SidebarItem(SidebarItemModel itemModel) {
+    public SidebarItem(@NotNull SidebarItemModel itemModel, @NotNull SidebarItemListener itemListener) {
         this.itemModel = itemModel;
 
         //load img
@@ -36,6 +38,7 @@ public class SidebarItem extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                itemListener.onAction(SidebarItem.this);
                 repaitRect();
             }
 
@@ -51,9 +54,6 @@ public class SidebarItem extends JComponent {
                 repaitRect();
             }
 
-            private void repaitRect () {
-                repaint(5, 5, getWidth() - 10, getHeight() - 10);
-            }
         });
     }
 
@@ -65,7 +65,7 @@ public class SidebarItem extends JComponent {
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 
         g.setColor(UIManager.getColor("border_color"));
-        if (hovered) {
+        if (hovered || active) {
             g.fillRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
         } else {
             g.drawRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
@@ -79,5 +79,21 @@ public class SidebarItem extends JComponent {
 
         g.drawImage(icon, (getWidth()/2) - 20, 10, 40, 40, null);
         g.drawString(itemModel.getCaption(), getWidth() / 2 - maxWidth / 2, 65);
+    }
+
+    private void repaitRect () {
+        repaint(5, 5, getWidth() - 10, getHeight() - 10);
+    }
+
+    public void setActive(boolean active) {
+        if (this.active == active)
+            return;
+
+        this.active = active;
+        repaitRect();
+    }
+
+    public SidebarItemModel getItemModel() {
+        return itemModel;
     }
 }

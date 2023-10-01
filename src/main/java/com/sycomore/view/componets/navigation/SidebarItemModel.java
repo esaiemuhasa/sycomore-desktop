@@ -1,30 +1,26 @@
 package com.sycomore.view.componets.navigation;
 
 public class SidebarItemModel {
-    private String caption;
-    private String icon;
+    private final String caption;
+    private final String icon;
 
-    public SidebarItemModel() {
-    }
+    private final String name;
 
-    public SidebarItemModel(String caption, String icon) {
+    public SidebarItemModel(String caption, String icon, String name) {
         this.caption = caption;
         this.icon = icon;
+        this.name = name;
     }
 
     public String getCaption() {
         return caption;
     }
 
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-
     public String getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public String getName() {
+        return name;
     }
 }
