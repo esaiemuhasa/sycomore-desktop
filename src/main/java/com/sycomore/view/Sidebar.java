@@ -1,5 +1,7 @@
 package com.sycomore.view;
 
+import com.sycomore.view.componets.navigation.SidebarItem;
+import com.sycomore.view.componets.navigation.SidebarItemModel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -20,7 +22,7 @@ public class Sidebar extends JPanel{
         add(container, BorderLayout.CENTER);
 
         setOpaque(true);
-        setBackground(UIManager.getColor("border_color"));
+        setBackground(UIManager.getColor("sidebar_background"));
         header.setBackground(getBackground());
         container.setBackground(getBackground());
     }
@@ -33,7 +35,13 @@ public class Sidebar extends JPanel{
     }
 
     private void initContainer () {
+        SidebarItemModel itemModelDashboard = new SidebarItemModel("états", "dashboard.png");
+        SidebarItemModel itemModelStudents = new SidebarItemModel("Élèves", "student.png");
+        SidebarItemModel itemModelControl = new SidebarItemModel("Configuration", "control.png");
 
+        container.add(new SidebarItem(itemModelDashboard),"h 80!");
+        container.add(new SidebarItem(itemModelStudents),"h 80!");
+        container.add(new SidebarItem(itemModelControl),"h 80!");
     }
 
     @Override
