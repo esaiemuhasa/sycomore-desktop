@@ -3,6 +3,7 @@ package com.sycomore.view;
 import com.sycomore.view.componets.navigation.SidebarItem;
 import com.sycomore.view.componets.navigation.SidebarItemModel;
 import com.sycomore.view.componets.navigation.SidebarMoreOption;
+import com.sycomore.view.componets.navigation.SidebarMoreOptionListener;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -15,9 +16,11 @@ public class Sidebar extends JPanel {
     public final JPanel container = new JPanel(layout);
     private final JPanel header = new JPanel(new BorderLayout());
     private SidebarItemChangeListener itemChangeListener;
+    private SidebarMoreOptionListener moreOptionListener;
     private SidebarItem currentItem;
 
     private final JPopupMenu popupMenu = new JPopupMenu();
+    private final JMenu schoolYears = new JMenu("Années scolaire");
 
     public Sidebar () {
         super(new BorderLayout());
@@ -50,12 +53,25 @@ public class Sidebar extends JPanel {
 
     private void initFooter () {
         JMenuItem logout = new JMenuItem("Quitter l'application", new ImageIcon("icons/close.png"));
-        JMenu school = new JMenu("Années scolaire");
         JMenuItem newYear = new JMenuItem("Nouvelle années scolaire", new ImageIcon("icons/tipp.png"));
         JMenuItem options = new JMenuItem("Orientation et classe d'études", new ImageIcon("icons/versions.png"));
 
+        logout.addActionListener(event -> {
+            if (moreOptionListener != null)
+                moreOptionListener.doLogout();
+        });
 
-        popupMenu.add(school);
+        newYear.addActionListener(event -> {
+            if (moreOptionListener != null)
+                moreOptionListener.doNewYear();
+        });
+
+        options.addActionListener( event -> {
+            if (moreOptionListener != null)
+                moreOptionListener.doOpenOptions();
+        });
+
+        popupMenu.add(schoolYears);
         popupMenu.add(newYear);
         popupMenu.add(options);
         popupMenu.addSeparator();
@@ -126,5 +142,9 @@ public class Sidebar extends JPanel {
      */
     public interface SidebarItemChangeListener {
         void onChange (SidebarItem currentItem, SidebarItem oldItem);
+    }
+
+    public void setMoreOptionListener(SidebarMoreOptionListener moreOptionListener) {
+        this.moreOptionListener = moreOptionListener;
     }
 }

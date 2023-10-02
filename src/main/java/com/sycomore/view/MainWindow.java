@@ -1,8 +1,10 @@
 package com.sycomore.view;
 
+import com.sycomore.entity.SchoolYear;
 import com.sycomore.helper.Config;
 import com.sycomore.view.componets.Workspace;
 import com.sycomore.view.componets.navigation.SidebarItem;
+import com.sycomore.view.componets.navigation.SidebarMoreOptionListener;
 import com.sycomore.view.workspace.ControlPanel;
 import com.sycomore.view.workspace.DashboardPanel;
 import com.sycomore.view.workspace.ReportsPanel;
@@ -62,4 +64,27 @@ public class MainWindow extends JFrame {
                 .addItem(new ReportsPanel())
                 .addItem(new ControlPanel());
     }
+
+
+    private SidebarMoreOptionListener moreOptionListener = new SidebarMoreOptionListener() {
+        @Override
+        public void doNewYear() {
+
+        }
+
+        @Override
+        public void doLogout() {
+
+        }
+
+        @Override
+        public void doLoadYear(SchoolYear year) {
+
+        }
+
+        @Override
+        public void doOpenOptions() {
+
+        }
+    };
 }
