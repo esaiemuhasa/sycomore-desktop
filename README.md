@@ -17,5 +17,5 @@ Caux frais connexes, ils sont personnel et periodiques.
 
 ## Structure des données
 
-![entity](https://github.com/EsaieMuhasa/sycomore-desktop/assets/95530551/d9c4f77f-0323-4f11-90b3-8ef9ca35ae08)
+![entity](https://github.com/EsaieMuhasa/sycomore-desktop/assets/95530551/275ef4cb-ebf4-497e-aa3a-a28889e10f48)
 
