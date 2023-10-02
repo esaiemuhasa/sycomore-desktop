@@ -5,6 +5,9 @@ import com.sycomore.helper.Config;
 import com.sycomore.view.MainWindow;
 import com.sycomore.view.SplashWindow;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -30,6 +33,9 @@ public class App
                 UIManager.put(key, color);
             }
         }
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(Config.get("persistence_unit"));
+        EntityManager manager = factory.createEntityManager();
 
         //SplashWindow splash = new SplashWindow();
         //splash.setVisible(true);

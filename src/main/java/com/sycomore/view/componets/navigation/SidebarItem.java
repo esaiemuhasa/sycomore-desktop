@@ -66,7 +66,7 @@ public class SidebarItem extends JComponent {
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 
         g.setColor(UIManager.getColor("border_color"));
-        if (hovered)
+        if (hovered || active)
             g.fillRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
         else
             g.drawRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);

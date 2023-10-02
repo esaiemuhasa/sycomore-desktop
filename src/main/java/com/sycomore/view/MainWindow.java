@@ -1,5 +1,6 @@
 package com.sycomore.view;
 
+import com.sycomore.helper.Config;
 import com.sycomore.view.componets.Workspace;
 import com.sycomore.view.componets.navigation.SidebarItem;
 import com.sycomore.view.workspace.ControlPanel;
@@ -16,7 +17,7 @@ public class MainWindow extends JFrame {
     private final Workspace workspace = new Workspace();
 
     public MainWindow ()  {
-        super("");
+        super(Config.get("app_name"));
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int w = (screen.width / 100) * 80;// 80 % de la largeur l'écran
