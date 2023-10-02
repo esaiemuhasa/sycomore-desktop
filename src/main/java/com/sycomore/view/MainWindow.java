@@ -8,8 +8,11 @@ import com.sycomore.view.workspace.DashboardPanel;
 import com.sycomore.view.workspace.ReportsPanel;
 import com.sycomore.view.workspace.StudentsPanel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class MainWindow extends JFrame {
 
@@ -18,6 +21,12 @@ public class MainWindow extends JFrame {
 
     public MainWindow ()  {
         super(Config.get("app_name"));
+
+        try {
+            setIconImage(ImageIO.read(new File("icons/logo.png")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int w = (screen.width / 100) * 80;// 80 % de la largeur l'écran

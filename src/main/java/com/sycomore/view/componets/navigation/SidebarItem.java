@@ -12,10 +12,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class SidebarItem extends JComponent {
-    private static final Font customFont = new Font("Arial", Font.BOLD, 12);
+    private static final Font CUSTOM_FONT = new Font("Arial", Font.BOLD, 9);
     private final SidebarItemModel itemModel;
     private final BufferedImage icon;
-    private final int maxWidth;
+    private final int captionWidth;
     private boolean hovered = false;
     private boolean active = false;
 
@@ -30,10 +30,10 @@ public class SidebarItem extends JComponent {
         }
         //==
 
-        FontMetrics metrics = getFontMetrics(customFont);
-        maxWidth = metrics.stringWidth(itemModel.getCaption());
+        FontMetrics metrics = getFontMetrics(CUSTOM_FONT);
+        captionWidth = metrics.stringWidth(itemModel.getCaption());
 
-        setPreferredSize(new Dimension(maxWidth + 20, 100));
+        setPreferredSize(new Dimension(captionWidth + 20, 100));
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         addMouseListener(new MouseAdapter() {
@@ -67,18 +67,20 @@ public class SidebarItem extends JComponent {
 
         g.setColor(UIManager.getColor("border_color"));
         if (hovered || active)
-            g.fillRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
+            g.fillRoundRect(5, 5, getWidth() - 11, getHeight() - 11, 10, 10);
         else
-            g.drawRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
+            g.drawRoundRect(5, 5, getWidth() - 11, getHeight() - 11, 10, 10);
 
         Color c = active ? UIManager.getColor("blue_bootstrap") : UIManager.getColor("sidebar_foreground");
         g.setColor(c);
 
         if (active)
-            g.drawRoundRect(5, 5, getWidth() - 12, getHeight() - 12, 10, 10);
+            g.drawRoundRect(5, 5, getWidth() - 11, getHeight() - 11, 10, 10);
 
-        g.drawImage(icon, (getWidth()/2) - 25, 10, 50, 50, null);
-        g.drawString(itemModel.getCaption(), getWidth() / 2 - maxWidth / 2, 75);
+        final int img_w = 50;
+        g.drawImage(icon, (getWidth()/2) - (img_w / 2), 10, img_w, img_w, null);
+        g.setFont(CUSTOM_FONT);
+        g.drawString(itemModel.getCaption(), getWidth() / 2 - captionWidth / 2, img_w + 20);
     }
 
     private void repaitRect () {
