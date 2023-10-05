@@ -2,6 +2,7 @@ package com.sycomore.view;
 
 import com.sycomore.entity.SchoolYear;
 import com.sycomore.helper.Config;
+import com.sycomore.view.componets.TextFieldWrapper;
 import com.sycomore.view.componets.Workspace;
 import com.sycomore.view.componets.navigation.SidebarItem;
 import com.sycomore.view.componets.navigation.SidebarMoreOptionListener;
@@ -13,13 +14,17 @@ import com.sycomore.view.workspace.StudentsPanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 public class MainWindow extends JFrame {
 
     private final Sidebar sidebar = new Sidebar();
     private final Workspace workspace = new Workspace();
+    private SchoolYearDialog schoolYearDialog;
 
     public MainWindow ()  {
         super(Config.get("app_name"));
@@ -47,6 +52,13 @@ public class MainWindow extends JFrame {
         init();
     }
 
+    private void buildSchoolYearDialog () {
+        if (schoolYearDialog != null)
+            return;
+
+        schoolYearDialog = new SchoolYearDialog(this);
+    }
+
     private void onSidebarItemChange (SidebarItem currentItem, SidebarItem oldItem) {
         workspace.showItem(currentItem.getItemModel().getName());
     }
@@ -63,13 +75,17 @@ public class MainWindow extends JFrame {
                 .addItem(new StudentsPanel())
                 .addItem(new ReportsPanel())
                 .addItem(new ControlPanel());
+
+        sidebar.setMoreOptionListener(moreOptionListener);
     }
 
 
-    private SidebarMoreOptionListener moreOptionListener = new SidebarMoreOptionListener() {
+    private final SidebarMoreOptionListener moreOptionListener = new SidebarMoreOptionListener() {
         @Override
         public void doNewYear() {
+            buildSchoolYearDialog();
 
+            schoolYearDialog.setVisible(true);
         }
 
         @Override
@@ -87,4 +103,63 @@ public class MainWindow extends JFrame {
 
         }
     };
+
+    /**
+     * Boite de dialogue d'insertion d'une nouvelle année scolaire
+     */
+    private static final class SchoolYearDialog extends JDialog {
+
+        private final TextFieldWrapper fieldLabel = new TextFieldWrapper("Libellé de l'année scolaire", "");
+        private final JButton buttonValidate = new JButton("Valider");
+        private final JButton buttonCancel = new JButton("Annuler");
+
+        SchoolYearDialog (MainWindow mainWindow) {
+            super(mainWindow, "Nouvelle années scolaire", true);
+
+            setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            setLocationRelativeTo(mainWindow);
+
+            JPanel content = new JPanel(new BorderLayout(10, 10));
+            JPanel footer = new JPanel();
+
+            footer.add(buttonValidate);
+            footer.add(buttonCancel);
+
+            content.add(fieldLabel, BorderLayout.NORTH);
+            content.add(footer, BorderLayout.CENTER);
+            content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            setContentPane(content);
+            pack();
+            setSize(300, getHeight());
+            setResizable(false);
+
+            listenEvents();
+        }
+
+        public void doDispose () {
+            setVisible(false);
+            dispose();
+        }
+
+        private void listenEvents () {
+            buttonValidate.addActionListener(event -> {
+                SchoolYear year = new SchoolYear();
+                year.setArchived(false);
+                year.setLabel(fieldLabel.getField().getText().trim());
+                year.setRecordingDate(new Date());
+
+                doDispose();
+            });
+            buttonCancel.addActionListener(event -> doDispose());
+
+
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    buttonCancel.doClick();
+                }
+            });
+        }
+    }
 }
