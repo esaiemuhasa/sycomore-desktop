@@ -1,5 +1,7 @@
 package com.sycomore.dao;
 
+import com.sycomore.entity.PersistableEntity;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -7,7 +9,7 @@ import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseRepositoryJPA <T> implements Repository<T> {
+public abstract class BaseRepositoryJPA <T extends PersistableEntity> implements Repository<T> {
     protected final DAOFactoryJPA factory;
     protected final List<RepositoryListener<T>> listeners = new ArrayList<>();
 
@@ -32,6 +34,17 @@ public abstract class BaseRepositoryJPA <T> implements Repository<T> {
     @Override
     public T find(int id) throws RuntimeException {
         return factory.getManager().find(getEntityClass(), id);
+    }
+
+    @Override
+    public T findOneLatest() throws RuntimeException {
+        EntityManager manager = getManager();
+        Class<T> cl = getEntityClass();
+
+        TypedQuery<T> query = manager.createQuery("SELECT u FROM "+cl.getSimpleName()+" u ORDER BY recordingDate DESC", cl);
+        query.setMaxResults(1).setFirstResult(0);
+
+        return query.getSingleResult();
     }
 
     @Override
@@ -78,13 +91,20 @@ public abstract class BaseRepositoryJPA <T> implements Repository<T> {
         if (commit)
             transaction.begin();
 
+        boolean hasId = t.getId() != null && t.getId() > 0;
+
+        T old = hasId ? find(t.getId()) : null;
+
         manager.persist(t);
         manager.flush();
 
         if (commit)
             transaction.commit();
 
-        fireOnAlter(null, t);
+        if (hasId)
+            fireOnUpdate(old, t);
+        else
+            fireOnCreate(t);
     }
 
     @Override

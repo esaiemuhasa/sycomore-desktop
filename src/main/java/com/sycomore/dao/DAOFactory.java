@@ -1,5 +1,7 @@
 package com.sycomore.dao;
 
+import com.sycomore.entity.PersistableEntity;
+
 import javax.persistence.EntityManager;
 
 public interface DAOFactory {
@@ -14,14 +16,14 @@ public interface DAOFactory {
     /**
      * Utilitaire d'instanciation d'une interface du DAO
      */
-    static <E, T extends Repository<E>> T getInstance  (Class<T> reposClass) {
+    static <E extends PersistableEntity, T extends Repository<E>> T getInstance  (Class<T> reposClass) {
         return getInstance().getRepository(reposClass);
     }
 
     /**
      * Utilitaire de recuperation d'une interface du DAO.
      */
-    <E, T extends Repository<E>> T getRepository  (Class<T> reposClass);
+    <E extends PersistableEntity, T extends Repository<E>> T getRepository  (Class<T> reposClass);
 
     /**
      * Démarrage d'une nouvelle transaction, s'il n'y a aucune.

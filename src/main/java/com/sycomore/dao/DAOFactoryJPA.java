@@ -1,5 +1,6 @@
 package com.sycomore.dao;
 
+import com.sycomore.entity.PersistableEntity;
 import com.sycomore.helper.Config;
 
 import javax.persistence.EntityManager;
@@ -10,9 +11,12 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Implementation par default du DAO
+ */
 public class DAOFactoryJPA implements DAOFactory {
     private final Map<String, Repository<?>> repositories = new HashMap<>();
-    private final EntityManager entityManager;
+    private EntityManager entityManager;
     private final EntityManagerFactory managerFactory;
 
     DAOFactoryJPA() {
@@ -21,7 +25,7 @@ public class DAOFactoryJPA implements DAOFactory {
     }
 
     @Override
-    public <E, T extends Repository<E>> T getRepository(Class<T> reposClass) {
+    public <E extends PersistableEntity, T extends Repository<E>> T getRepository(Class<T> reposClass) {
         if (!repositories.containsKey(reposClass.getName())) {
             try {
                 Constructor<T> constructor = reposClass.getConstructor(DAOFactoryJPA.class);
@@ -66,6 +70,9 @@ public class DAOFactoryJPA implements DAOFactory {
      */
     @Override
     public EntityManager getManager () {
+        if (!entityManager.isOpen())
+            entityManager = managerFactory.createEntityManager();
+
         return entityManager;
     }
 

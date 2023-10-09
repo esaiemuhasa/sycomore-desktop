@@ -1,11 +1,18 @@
 package com.sycomore.dao;
 
-public interface Repository <T> {
+import com.sycomore.entity.PersistableEntity;
+
+public interface Repository <T extends PersistableEntity> {
     DAOFactory getFactory ();
     /**
      * Recuperation de l'entité dont l'id est en paramètre
      */
     T find (int id) throws RuntimeException;
+
+    /**
+     * Recuperation du dernier enregistrement d'une table
+     */
+    T findOneLatest () throws RuntimeException;
 
     /**
      * Selection de toutes les occurrences d'une table dans la bdd

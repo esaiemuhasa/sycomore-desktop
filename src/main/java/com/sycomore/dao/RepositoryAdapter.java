@@ -1,10 +1,12 @@
 package com.sycomore.dao;
 
+import com.sycomore.entity.PersistableEntity;
+
 /**
  * Helper de l'interface d'émission des événements par l'une interface du DAO
  * @param <T>
  */
-public abstract class RepositoryAdapter <T> implements RepositoryListener<T> {
+public abstract class RepositoryAdapter <T extends PersistableEntity> implements RepositoryListener<T> {
     @Override
     public void onCreate(T t) {}
 
