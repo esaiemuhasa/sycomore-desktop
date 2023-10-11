@@ -1,11 +1,14 @@
 package com.sycomore.model;
 
+import com.sycomore.entity.Inscription;
+import com.sycomore.entity.Promotion;
 import com.sycomore.entity.SchoolYear;
 import com.sycomore.helper.event.ProgressEmitter;
 import com.sycomore.helper.event.ProgressListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Utilitaire de mis memoire des touts les données relatifs a une année scolaire
@@ -20,6 +23,11 @@ public class YearDataModel implements ProgressEmitter {
 
     private Thread thread;
 
+    //donnees mis en cache
+    private final List<Promotion> promotions = new ArrayList<>();
+    private final List<Inscription> inscriptions = new ArrayList<>();
+    //==================
+
     private YearDataModel () {}
 
     public static YearDataModel getInstance() {
@@ -33,7 +41,10 @@ public class YearDataModel implements ProgressEmitter {
         return year;
     }
 
-    public void setYear(SchoolYear year) {
+    public synchronized void setYear(SchoolYear year) {
+        if (Objects.equals(year, this.year))
+            return;
+
         this.year = year;
         reload();
     }
@@ -41,7 +52,11 @@ public class YearDataModel implements ProgressEmitter {
     /**
      * Action de rechargement de donnee du model
      */
-    private synchronized void doReload () {}
+    private synchronized void doReload () {
+        fireLoadStart();
+
+        fireLoadFinish();
+    }
 
     /**
      * Demande de rechargement des donnees du model.
@@ -53,6 +68,16 @@ public class YearDataModel implements ProgressEmitter {
             thread.start();
         }
     }
+
+    /**
+     * Emission de l'évènement de debut de chargement des donnees du model
+     */
+    protected void fireLoadStart() {}
+
+    /**
+     * Emission de l'évènement de fin de chargement des données du model
+     */
+    protected void fireLoadFinish() {}
 
     @Override
     public void addProgressListener(ProgressListener listener) {

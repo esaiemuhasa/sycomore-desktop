@@ -2,6 +2,7 @@ package com.sycomore.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @MappedSuperclass()
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -40,5 +41,17 @@ public abstract class PersistableEntity {
 
     public void setUpdatingDate(Date updatingDate) {
         this.updatingDate = updatingDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !obj.getClass().equals(getClass()))
+            return false;
+
+        try {
+            PersistableEntity entity = (PersistableEntity) obj;
+            return Objects.equals(entity.id, id);
+        } catch (ClassCastException ignored) {}
+        return false;
     }
 }
