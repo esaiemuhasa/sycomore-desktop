@@ -8,6 +8,7 @@ import com.sycomore.view.componets.TextFieldWrapper;
 import com.sycomore.view.componets.Workspace;
 import com.sycomore.view.componets.navigation.SidebarItem;
 import com.sycomore.view.componets.navigation.SidebarMoreOptionListener;
+import com.sycomore.view.moreoption.GlobalSettingDialog;
 import com.sycomore.view.moreoption.SchoolYearDialog;
 import com.sycomore.view.workspace.ControlPanel;
 import com.sycomore.view.workspace.DashboardPanel;
@@ -32,6 +33,7 @@ public class MainWindow extends JFrame {
 
     private final YearDataModel dataModel = YearDataModel.getInstance();
     private SchoolYearDialog schoolYearDialog;
+    private GlobalSettingDialog globalSettingDialog;
 
     private MainWindow ()  {
         super(Config.get("app_name"));
@@ -76,6 +78,13 @@ public class MainWindow extends JFrame {
             return;
 
         schoolYearDialog = new SchoolYearDialog(this);
+    }
+
+    private void buildGlobalSettingDialog () {
+        if (globalSettingDialog != null)
+            return;
+
+        globalSettingDialog = new GlobalSettingDialog(this);
     }
 
     private void onSidebarItemChange (SidebarItem currentItem, SidebarItem oldItem) {
@@ -140,7 +149,9 @@ public class MainWindow extends JFrame {
 
         @Override
         public void doOpenOptions() {
+            buildGlobalSettingDialog();
 
+            globalSettingDialog.setVisible(true);
         }
     };
 }
