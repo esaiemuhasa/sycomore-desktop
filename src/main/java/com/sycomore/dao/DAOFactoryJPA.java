@@ -24,6 +24,10 @@ public class DAOFactoryJPA implements DAOFactory {
         entityManager = managerFactory.createEntityManager();
     }
 
+    public boolean hasRepository (Class<?> reposClass) {
+        return repositories.containsKey(reposClass.getName());
+    }
+
     @Override
     public <E extends PersistableEntity, T extends Repository<E>> T getRepository(Class<T> reposClass) {
         if (!repositories.containsKey(reposClass.getName())) {

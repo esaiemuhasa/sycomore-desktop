@@ -14,13 +14,10 @@ public abstract class BaseRepositoryJPA <T extends PersistableEntity> implements
     protected final DAOFactoryJPA factory;
     protected final List<RepositoryListener<T>> listeners = new ArrayList<>();
 
-    protected static BaseRepositoryJPA<?> instance;
-
-    public BaseRepositoryJPA (DAOFactoryJPA factory) {
+    public BaseRepositoryJPA (DAOFactoryJPA factory) throws RuntimeException {
         this.factory = factory;
-        if (instance != null)
-            throw new RuntimeException("Vous n'avez pas le droit d'instancier 2 fois la class "+instance.getClass().getName());
-        instance = this;
+        if(factory.hasRepository(getClass()))
+            throw new RuntimeException("Vous n'avez pas le droit d'instancier 2 fois la class "+getClass().getName());
     }
 
     protected EntityManager getManager () {

@@ -16,7 +16,7 @@ public class GlobalSettingDialog extends JDialog {
     private void init () {
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab("Écoles", new JPanel());
+        tabbedPane.addTab("Écoles", new SchoolsPanel());
         tabbedPane.addTab("Sections et options", new JPanel());
         tabbedPane.addTab("Classe d'études", new JPanel());
         tabbedPane.addTab("Catégorisation classe d'étude", new JPanel());

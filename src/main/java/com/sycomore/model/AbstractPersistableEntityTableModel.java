@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractPersistableEntityTableModel <T extends PersistableEntity> extends AbstractTableModel {
-    private final List<T> rows = new ArrayList<>();
+    protected final List<T> rows = new ArrayList<>();
 
     private final Repository<T> repository;
 
