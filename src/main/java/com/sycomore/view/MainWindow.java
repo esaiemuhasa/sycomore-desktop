@@ -2,10 +2,13 @@ package com.sycomore.view;
 
 import com.sycomore.entity.SchoolYear;
 import com.sycomore.helper.Config;
+import com.sycomore.model.YearDataModel;
+import com.sycomore.model.YearDataModelListener;
 import com.sycomore.view.componets.TextFieldWrapper;
 import com.sycomore.view.componets.Workspace;
 import com.sycomore.view.componets.navigation.SidebarItem;
 import com.sycomore.view.componets.navigation.SidebarMoreOptionListener;
+import com.sycomore.view.moreoption.SchoolYearDialog;
 import com.sycomore.view.workspace.ControlPanel;
 import com.sycomore.view.workspace.DashboardPanel;
 import com.sycomore.view.workspace.ReportsPanel;
@@ -22,11 +25,15 @@ import java.util.Date;
 
 public class MainWindow extends JFrame {
 
+    private static MainWindow instance;
+
     private final Sidebar sidebar = new Sidebar();
     private final Workspace workspace = new Workspace();
+
+    private final YearDataModel dataModel = YearDataModel.getInstance();
     private SchoolYearDialog schoolYearDialog;
 
-    public MainWindow ()  {
+    private MainWindow ()  {
         super(Config.get("app_name"));
 
         try {
@@ -50,6 +57,18 @@ public class MainWindow extends JFrame {
         container.add(workspace, BorderLayout.CENTER);
 
         init();
+
+        dataModel.addYearDataListener(dataModelListener);
+    }
+
+    public static MainWindow getInstance () {
+        if (instance == null)
+            instance = new MainWindow();
+        return instance;
+    }
+
+    public static void setup () {
+        getInstance();
     }
 
     private void buildSchoolYearDialog () {
@@ -79,6 +98,27 @@ public class MainWindow extends JFrame {
         sidebar.setMoreOptionListener(moreOptionListener);
     }
 
+    private void doClosing () {
+        dataModel.removeYearDataListener(dataModelListener);
+    }
+
+    private final YearDataModelListener dataModelListener = new YearDataModelListener() {
+        @Override
+        public void onSetup() {
+
+        }
+
+        @Override
+        public void onLoadStart() {
+
+        }
+
+        @Override
+        public void onLoadFinish() {
+
+        }
+    };
+
 
     private final SidebarMoreOptionListener moreOptionListener = new SidebarMoreOptionListener() {
         @Override
@@ -103,63 +143,4 @@ public class MainWindow extends JFrame {
 
         }
     };
-
-    /**
-     * Boite de dialogue d'insertion d'une nouvelle année scolaire
-     */
-    private static final class SchoolYearDialog extends JDialog {
-
-        private final TextFieldWrapper fieldLabel = new TextFieldWrapper("Libellé de l'année scolaire", "");
-        private final JButton buttonValidate = new JButton("Valider");
-        private final JButton buttonCancel = new JButton("Annuler");
-
-        SchoolYearDialog (MainWindow mainWindow) {
-            super(mainWindow, "Nouvelle années scolaire", true);
-
-            setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-            setLocationRelativeTo(mainWindow);
-
-            JPanel content = new JPanel(new BorderLayout(10, 10));
-            JPanel footer = new JPanel();
-
-            footer.add(buttonValidate);
-            footer.add(buttonCancel);
-
-            content.add(fieldLabel, BorderLayout.NORTH);
-            content.add(footer, BorderLayout.CENTER);
-            content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-            setContentPane(content);
-            pack();
-            setSize(300, getHeight());
-            setResizable(false);
-
-            listenEvents();
-        }
-
-        public void doDispose () {
-            setVisible(false);
-            dispose();
-        }
-
-        private void listenEvents () {
-            buttonValidate.addActionListener(event -> {
-                SchoolYear year = new SchoolYear();
-                year.setArchived(false);
-                year.setLabel(fieldLabel.getField().getText().trim());
-                year.setRecordingDate(new Date());
-
-                doDispose();
-            });
-            buttonCancel.addActionListener(event -> doDispose());
-
-
-            addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    buttonCancel.doClick();
-                }
-            });
-        }
-    }
 }

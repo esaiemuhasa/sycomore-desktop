@@ -8,6 +8,11 @@ import com.sycomore.entity.SchoolYear;
 public interface YearDataModelListener {
 
     /**
+     * Événement d'initialisation du model des données annuel
+     */
+    void onSetup ();
+
+    /**
      * Debut de chargement du model des donnees
      */
     void onLoadStart();

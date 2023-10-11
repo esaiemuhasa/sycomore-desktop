@@ -1,5 +1,8 @@
 package com.sycomore.view;
 
+import com.sycomore.model.YearDataModel;
+import com.sycomore.model.YearDataModelListener;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -28,11 +31,29 @@ public class SplashWindow extends JWindow {
         bottom.add(progressBar, BorderLayout.CENTER);
 
         progressBar.setStringPainted(true);
-        progressBar.setString("Chargement encours...");
+        progressBar.setString("Initialisation des composants graphiques...");
         progressBar.setIndeterminate(true);
 
         content.add(bottom, BorderLayout.SOUTH);
+        YearDataModel.getInstance().addYearDataListener(dataModelListener);
     }
+
+    private final YearDataModelListener dataModelListener = new YearDataModelListener() {
+        @Override
+        public void onSetup() {
+            progressBar.setString("Initialisation du modèle global des données");
+        }
+
+        @Override
+        public void onLoadStart() {
+            progressBar.setString("Chargement des données");
+        }
+
+        @Override
+        public void onLoadFinish() {
+            YearDataModel.getInstance().removeYearDataListener(dataModelListener);
+        }
+    };
 
     private static class SplashBkg extends JPanel {
         private final Image bkg;

@@ -7,6 +7,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public abstract class BaseRepositoryJPA <T extends PersistableEntity> implements Repository<T> {
@@ -92,6 +93,9 @@ public abstract class BaseRepositoryJPA <T extends PersistableEntity> implements
             transaction.begin();
 
         boolean hasId = t.getId() != null && t.getId() > 0;
+
+        if (!hasId && t.getRecordingDate() == null)
+            t.setRecordingDate(new Date());
 
         T old = hasId ? find(t.getId()) : null;
 

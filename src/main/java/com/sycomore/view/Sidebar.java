@@ -1,5 +1,11 @@
 package com.sycomore.view;
 
+import com.sycomore.dao.DAOFactory;
+import com.sycomore.dao.RepositoryAdapter;
+import com.sycomore.dao.SchoolYearRepository;
+import com.sycomore.entity.SchoolYear;
+import com.sycomore.model.YearDataModel;
+import com.sycomore.model.YearDataModelListener;
 import com.sycomore.view.componets.navigation.SidebarItem;
 import com.sycomore.view.componets.navigation.SidebarItemModel;
 import com.sycomore.view.componets.navigation.SidebarMoreOption;
@@ -8,6 +14,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -21,9 +28,14 @@ public class Sidebar extends JPanel {
 
     private final JPopupMenu popupMenu = new JPopupMenu();
     private final JMenu schoolYears = new JMenu("Années scolaire");
+    private final ButtonGroup schoolYearGroup = new ButtonGroup();//group items année scolaire
+    private final SchoolYearRepository yearRepository;
+    private final YearDataModel yearDataModel = YearDataModel.getInstance();
 
     public Sidebar () {
         super(new BorderLayout());
+
+        yearRepository = DAOFactory.getInstance(SchoolYearRepository.class);
 
         initHeader();
         initFooter();
@@ -49,6 +61,36 @@ public class Sidebar extends JPanel {
         setBackground(UIManager.getColor("sidebar_background"));
         header.setBackground(getBackground());
         container.setBackground(getBackground());
+
+        yearRepository.addRepositoryListener(new RepositoryAdapter<SchoolYear>() {
+            @Override
+            public void onCreate(SchoolYear year) {
+                reloadYearItems();
+            }
+
+            @Override
+            public void onUpdate(SchoolYear oldState, SchoolYear newState) {
+                reloadYearItems();
+            }
+
+            @Override
+            public void onDelete(SchoolYear year) {
+                reloadYearItems();
+            }
+        });
+
+        yearDataModel.addYearDataListener(new YearDataModelListener() {
+            @Override
+            public void onSetup() {
+                reloadYearItems();
+            }
+
+            @Override
+            public void onLoadStart() {}
+
+            @Override
+            public void onLoadFinish() {}
+        });
     }
 
     private void initFooter () {
@@ -77,6 +119,45 @@ public class Sidebar extends JPanel {
         popupMenu.addSeparator();
         popupMenu.add(logout);
     }
+
+    private void reloadYearItems () {
+        SchoolYear [] years = yearDataModel.getYears();
+
+        Component [] components = schoolYears.getComponents();
+
+        if (components != null && components.length > 1) {
+            for (Component c: components) {
+                if (c instanceof JRadioButtonMenuItem) {
+                    JRadioButtonMenuItem item = (JRadioButtonMenuItem) c;
+                    item.removeActionListener(this::doChooseYear);
+                    schoolYearGroup.remove(item);
+                }
+            }
+
+            schoolYears.removeAll();
+        }
+
+        SchoolYear current = yearDataModel.getYear();
+        if (years != null) {
+            for (SchoolYear y : years) {
+                JRadioButtonMenuItem item = new JRadioButtonMenuItem(y.getLabel());
+
+                if (current  != null) {
+                    if (current.equals(y))
+                        item.setSelected(true);
+                }
+
+                schoolYears.add(item);
+                schoolYearGroup.add(item);
+            }
+        }
+    }
+
+    /**
+     * Lors du click sur un item du menu qui représente une année scolaire
+     */
+    private void doChooseYear (ActionEvent event) {}
+
 
     private void doShowPopup () {
         int y = getHeight() - 145;
