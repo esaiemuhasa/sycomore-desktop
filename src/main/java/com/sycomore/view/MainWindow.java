@@ -69,6 +69,11 @@ public class MainWindow extends JFrame {
         return instance;
     }
 
+    public static void updateTitle (String title) {
+        MainWindow window = getInstance();
+        window.setTitle(Config.get("app_name")+" - "+window.dataModel.getYear().getLabel()+" | "+title);
+    }
+
     public static void setup () {
         getInstance();
     }
@@ -88,6 +93,7 @@ public class MainWindow extends JFrame {
     }
 
     private void onSidebarItemChange (SidebarItem currentItem, SidebarItem oldItem) {
+        updateTitle(currentItem.getItemModel().getCaption());
         workspace.showItem(currentItem.getItemModel().getName());
     }
 
@@ -114,17 +120,17 @@ public class MainWindow extends JFrame {
     private final YearDataModelListener dataModelListener = new YearDataModelListener() {
         @Override
         public void onSetup() {
-
+            updateTitle(sidebar.getCurrentItem().getItemModel().getCaption());
         }
 
         @Override
         public void onLoadStart() {
-
+            setTitle(Config.get("app_name")+" - "+dataModel.getYear().getLabel());
         }
 
         @Override
         public void onLoadFinish() {
-
+            setTitle(Config.get("app_name")+" - "+dataModel.getYear().getLabel());
         }
     };
 
@@ -138,13 +144,11 @@ public class MainWindow extends JFrame {
         }
 
         @Override
-        public void doLogout() {
-
-        }
+        public void doLogout() {}
 
         @Override
         public void doLoadYear(SchoolYear year) {
-
+            setTitle(Config.get("app_name")+" - "+year.getLabel());
         }
 
         @Override

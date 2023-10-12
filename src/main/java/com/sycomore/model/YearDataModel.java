@@ -1,11 +1,7 @@
 package com.sycomore.model;
 
-import com.sycomore.dao.DAOFactory;
-import com.sycomore.dao.RepositoryAdapter;
-import com.sycomore.dao.SchoolYearRepository;
-import com.sycomore.entity.Inscription;
-import com.sycomore.entity.Promotion;
-import com.sycomore.entity.SchoolYear;
+import com.sycomore.dao.*;
+import com.sycomore.entity.*;
 import com.sycomore.helper.event.ProgressEmitter;
 import com.sycomore.helper.event.ProgressListener;
 
@@ -32,14 +28,51 @@ public class YearDataModel implements ProgressEmitter {
 
     //donnees mis en cache
     private final List<SchoolYear> years = new ArrayList<>();
-    private final List<Promotion> promotions = new ArrayList<>();
-    private final List<Inscription> inscriptions = new ArrayList<>();
+    private final List<Promotion> promotions = new ArrayList<>();//liste des promotions d'une année
+    private final List<School> schools = new ArrayList<>();//liste des écoles pour une année
+    private final List<Inscription> inscriptions = new ArrayList<>();//Liste des élèves inscrits pour l'année en cours de consultation
     //==================
 
     private final SchoolYearRepository yearRepository;
+    private final SchoolRepository schoolRepository;
+
+    private final PromotionRepository promotionRepository;
 
     private YearDataModel () {
         yearRepository = DAOFactory.getInstance(SchoolYearRepository.class);
+        schoolRepository = DAOFactory.getInstance(SchoolRepository.class);
+        promotionRepository = DAOFactory.getInstance(PromotionRepository.class);
+
+        promotionRepository.addRepositoryListener(new RepositoryAdapter<Promotion>() {
+            @Override
+            public void onCreate(Promotion promotion) {
+                if (promotion.getYear().equals(year)) {
+                    promotions.add(promotion);
+
+                    if (schools.size() != schoolRepository.countAll()) {
+                        schools.clear();
+                        getSchools();
+                    }
+                }
+            }
+
+            @Override
+            public void onDelete(Promotion promotion) {
+                if (!promotion.getYear().equals(year))
+                    return;
+
+                for (int i = 0; i < promotions.size(); i++) {
+                    Promotion p = promotions.get(i);
+                    if (p.equals(promotion)) {
+                        promotions.remove(i);
+                        schools.clear();
+                        break;
+                    }
+                }
+
+                getSchools();
+            }
+        });
 
         yearRepository.addRepositoryListener(new RepositoryAdapter<SchoolYear>() {
             @Override
@@ -151,6 +184,82 @@ public class YearDataModel implements ProgressEmitter {
     }
 
     /**
+     * Recuperation des écoles
+     */
+    public School [] getSchools () {
+        if (schools.isEmpty()) {
+            for (Promotion p: promotions) {
+                boolean exists = false;
+
+                for (School s: schools) {
+                    if (s.equals(p.getSchool())) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists)
+                    schools.add(p.getSchool());
+
+                if (schools.size() == schoolRepository.countAll())
+                    break;
+            }
+        }
+
+        if (schools.isEmpty())
+            return null;
+
+        int size = schools.size();
+        return schools.toArray(new School[size]);
+    }
+
+    /**
+     * Recuperation de la liste des promotions d'une école pour une année
+     */
+    public Promotion [] getPromotions (School school) {
+        List<Promotion> ps = new ArrayList<>();
+        for (Promotion p : promotions) {
+            if (p.getSchool().equals(school))
+                ps.add(p);
+        }
+
+        int count = ps.size();
+        return ps.toArray(new Promotion[count]);
+    }
+
+    /**
+     * Filtrage des promotions d'une option
+     */
+    public Promotion [] getPromotions (Option option) {
+        List<Promotion> ps = new ArrayList<>();
+        for (Promotion p : promotions) {
+            if (p.getOption().equals(option))
+                ps.add(p);
+        }
+
+        int count = ps.size();
+        return ps.toArray(new Promotion[count]);
+    }
+
+    /**
+     * Recuperation de la liste des élèves inscrit dans une promotion.
+     */
+    public Inscription [] getInscriptions (Promotion promotion) {
+        List<Inscription> is = new ArrayList<>();
+
+        for (Inscription i : inscriptions) {
+            if (i.getPromotion().equals(promotion))
+                is.add(i);
+        }
+
+        if (is.isEmpty())
+            return null;
+
+        int count = is.size();
+        return is.toArray(new Inscription[count]);
+    }
+
+    /**
      * Action de rechargement de donnee du model
      */
     private synchronized void doReload () {
@@ -213,4 +322,5 @@ public class YearDataModel implements ProgressEmitter {
     public void removeProgressListener(ProgressListener listener) {
         progressListeners.remove(listener);
     }
+
 }

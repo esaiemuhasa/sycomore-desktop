@@ -14,10 +14,28 @@ public abstract class BaseRepositoryJPA <T extends PersistableEntity> implements
     protected final DAOFactoryJPA factory;
     protected final List<RepositoryListener<T>> listeners = new ArrayList<>();
 
+    protected int countData = -1;//mis en cache du nombre des occurrences dans la table concerné
+
+    protected RepositoryAdapter<T> repositoryAdapter = new RepositoryAdapter<T>() {
+        @Override
+        public void onCreate(T t) {
+            if (countData != -1)
+                countData++;
+        }
+
+        @Override
+        public void onDelete(T t) {
+            if (countData != -1)
+                countData--;
+        }
+    };
+
     public BaseRepositoryJPA (DAOFactoryJPA factory) throws RuntimeException {
         this.factory = factory;
         if(factory.hasRepository(getClass()))
             throw new RuntimeException("Vous n'avez pas le droit d'instancier 2 fois la class "+getClass().getName());
+
+        addRepositoryListener(repositoryAdapter);
     }
 
     protected EntityManager getManager () {
@@ -74,10 +92,14 @@ public abstract class BaseRepositoryJPA <T extends PersistableEntity> implements
 
     @Override
     public int countAll() throws RuntimeException {
-        EntityManager manager = getManager();
-        Class<T> cl = getEntityClass();
-        Query query = manager.createQuery("SELECT COUNT(u.id) FROM "+cl.getSimpleName()+" u");
-        return Integer.parseInt(query.getSingleResult().toString());
+        if (countData == -1) {
+            EntityManager manager = getManager();
+            Class<T> cl = getEntityClass();
+            Query query = manager.createQuery("SELECT COUNT(u.id) FROM "+cl.getSimpleName()+" u");
+            countData = Integer.parseInt(query.getSingleResult().toString());
+        }
+
+        return countData;
     }
 
     @Override

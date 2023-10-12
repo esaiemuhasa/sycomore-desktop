@@ -3,7 +3,6 @@ package com.sycomore.view.moreoption;
 import com.sycomore.dao.CategoryRepository;
 import com.sycomore.dao.DAOFactory;
 import com.sycomore.entity.Category;
-import com.sycomore.entity.School;
 import com.sycomore.model.CategoryTableModel;
 
 import javax.swing.*;
@@ -31,6 +30,8 @@ public class CategoriesPanel extends JPanel {
         super (new BorderLayout(5, 5));
         categoryRepository = DAOFactory.getInstance(CategoryRepository.class);
         init();
+
+        tableModel.init();
     }
 
     private Category getSelectedItem () {
