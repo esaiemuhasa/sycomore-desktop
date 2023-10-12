@@ -1,7 +1,6 @@
 package com.sycomore.model;
 
 import com.sycomore.dao.DAOFactory;
-import com.sycomore.dao.Repository;
 import com.sycomore.dao.SchoolRepository;
 import com.sycomore.entity.School;
 
@@ -10,15 +9,12 @@ import java.util.Arrays;
 
 public class SchoolTableModel extends AbstractPersistableEntityTableModel<School> {
 
-    private final SchoolRepository schoolRepository;
-
     public SchoolTableModel() {
         super(DAOFactory.getInstance(SchoolRepository.class));
-        schoolRepository = DAOFactory.getInstance(SchoolRepository.class);
     }
 
     public void init () {
-        School [] schools = schoolRepository.findAll();
+        School [] schools = repository.findAll();
         if (schools == null)
             return;
 

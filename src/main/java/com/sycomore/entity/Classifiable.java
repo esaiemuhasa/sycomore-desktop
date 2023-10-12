@@ -30,4 +30,9 @@ public abstract class Classifiable extends PersistableEntity {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
+    @Override
+    public String toString() {
+        return fullName+" ("+shortName+")";
+    }
 }
