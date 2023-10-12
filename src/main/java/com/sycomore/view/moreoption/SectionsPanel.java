@@ -38,7 +38,6 @@ public class SectionsPanel extends JPanel {
         optionRepository = DAOFactory.getInstance(OptionRepository.class);
         init();
 
-
         boxModel.init();
     }
 
