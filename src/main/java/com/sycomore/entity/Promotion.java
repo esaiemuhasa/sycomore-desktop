@@ -88,7 +88,7 @@ public class Promotion extends PersistableEntity {
         }
 
         if (getOption() != null) {
-            name += getOption().getFullName();
+            name += " "+getOption().getFullName();
         }
 
         return name;

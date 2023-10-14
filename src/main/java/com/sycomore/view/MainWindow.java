@@ -3,6 +3,7 @@ package com.sycomore.view;
 import com.sycomore.entity.SchoolYear;
 import com.sycomore.helper.Config;
 import com.sycomore.model.YearDataModel;
+import com.sycomore.model.YearDataModelAdapter;
 import com.sycomore.model.YearDataModelListener;
 import com.sycomore.view.componets.TextFieldWrapper;
 import com.sycomore.view.componets.Workspace;
@@ -117,7 +118,7 @@ public class MainWindow extends JFrame {
         dataModel.removeYearDataListener(dataModelListener);
     }
 
-    private final YearDataModelListener dataModelListener = new YearDataModelListener() {
+    private final YearDataModelListener dataModelListener = new YearDataModelAdapter() {
         @Override
         public void onSetup() {
             updateTitle(sidebar.getCurrentItem().getItemModel().getCaption());

@@ -3,6 +3,7 @@ package com.sycomore;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.sycomore.helper.Config;
 import com.sycomore.model.YearDataModel;
+import com.sycomore.model.YearDataModelAdapter;
 import com.sycomore.model.YearDataModelListener;
 import com.sycomore.view.MainWindow;
 import com.sycomore.view.SplashWindow;
@@ -40,12 +41,7 @@ public class App
 
         MainWindow.setup();
 
-        YearDataModelListener modelListener = new YearDataModelListener() {
-            @Override
-            public void onSetup() {}
-            @Override
-            public void onLoadStart() {}
-
+        YearDataModelListener modelListener = new YearDataModelAdapter() {
             @Override
             public void onLoadFinish() {
                 model.removeYearDataListener(this);

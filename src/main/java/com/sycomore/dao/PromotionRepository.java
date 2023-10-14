@@ -26,9 +26,9 @@ public class PromotionRepository extends BaseRepositoryJPA<Promotion> {
     /**
      * Selection de la liste des promotions d'une année scolaire.
      */
-    protected Promotion [] findAllByYear (SchoolYear year) {
+    public Promotion [] findAllByYear (SchoolYear year) {
         EntityManager manager = getManager();
-        TypedQuery<Promotion> query = manager.createQuery("SELECT p FROM "+getEntityClass().getSimpleName()+" WHERE p.year = :year", getEntityClass());
+        TypedQuery<Promotion> query = manager.createQuery("SELECT p FROM "+getEntityClass().getSimpleName()+" p WHERE p.year = :year", getEntityClass());
         query.setParameter("year", year);
         List<Promotion> list = query.getResultList();
         if (list == null || list.isEmpty())

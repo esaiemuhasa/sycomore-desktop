@@ -35,6 +35,12 @@ public class PromotionTableModel extends AbstractPersistableEntityTableModel <Pr
     }
 
     @Override
+    public void onCreate(Promotion promotion) {
+        if (promotion.getSchool().equals(school) && promotion.getYear().equals(dataModel.getYear()))
+            super.onCreate(promotion);
+    }
+
+    @Override
     public String getColumnName(int column) {
         if (column < TITLES.length)
             return TITLES[column];

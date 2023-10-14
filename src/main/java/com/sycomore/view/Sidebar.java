@@ -5,6 +5,7 @@ import com.sycomore.dao.RepositoryAdapter;
 import com.sycomore.dao.SchoolYearRepository;
 import com.sycomore.entity.SchoolYear;
 import com.sycomore.model.YearDataModel;
+import com.sycomore.model.YearDataModelAdapter;
 import com.sycomore.model.YearDataModelListener;
 import com.sycomore.view.componets.navigation.SidebarItem;
 import com.sycomore.view.componets.navigation.SidebarItemModel;
@@ -79,17 +80,12 @@ public class Sidebar extends JPanel {
             }
         });
 
-        yearDataModel.addYearDataListener(new YearDataModelListener() {
+        yearDataModel.addYearDataListener(new YearDataModelAdapter() {
             @Override
             public void onSetup() {
                 reloadYearItems();
             }
 
-            @Override
-            public void onLoadStart() {}
-
-            @Override
-            public void onLoadFinish() {}
         });
     }
 

@@ -263,7 +263,14 @@ public class YearDataModel implements ProgressEmitter {
      * Action de rechargement de donnee du model
      */
     private synchronized void doReload () {
+        promotions.clear();
+        schools.clear();
+
         fireLoadStart();
+
+        Promotion [] ps = promotionRepository.findAllByYear(getYear());
+        if (ps != null)
+            promotions.addAll(Arrays.asList(ps));
 
         fireLoadFinish();
     }

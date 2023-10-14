@@ -1,6 +1,7 @@
 package com.sycomore.view;
 
 import com.sycomore.model.YearDataModel;
+import com.sycomore.model.YearDataModelAdapter;
 import com.sycomore.model.YearDataModelListener;
 
 import javax.imageio.ImageIO;
@@ -38,7 +39,7 @@ public class SplashWindow extends JWindow {
         YearDataModel.getInstance().addYearDataListener(dataModelListener);
     }
 
-    private final YearDataModelListener dataModelListener = new YearDataModelListener() {
+    private final YearDataModelListener dataModelListener = new YearDataModelAdapter() {
         @Override
         public void onSetup() {
             progressBar.setString("Initialisation du modèle global des données");

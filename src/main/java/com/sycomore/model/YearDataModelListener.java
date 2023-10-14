@@ -1,5 +1,6 @@
 package com.sycomore.model;
 
+import com.sycomore.entity.Promotion;
 import com.sycomore.entity.SchoolYear;
 
 /**
@@ -21,5 +22,10 @@ public interface YearDataModelListener {
      * Fin de chargement du model des données
      */
     void onLoadFinish();
+
+    /**
+     * Lors qu'il y a une modification qui touche la liste des promotions
+     */
+    void onPromotionTreeChange (Promotion ...promotions);
 
 }
