@@ -29,4 +29,9 @@ public class PromotionStudyFees extends PersistableEntity {
     public void setConfig(StudyFeesConfig config) {
         this.config = config;
     }
+
+    @Override
+    public String toString() {
+        return promotion.getFullName();
+    }
 }

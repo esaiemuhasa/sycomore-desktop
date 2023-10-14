@@ -63,4 +63,9 @@ public abstract class ConfigurableFees extends PersistableEntity {
     public void setYear(SchoolYear year) {
         this.year = year;
     }
+
+    @Override
+    public String toString() {
+        return amount+" USD, "+caption;
+    }
 }

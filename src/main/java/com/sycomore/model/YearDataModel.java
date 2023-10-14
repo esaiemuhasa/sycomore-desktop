@@ -28,6 +28,9 @@ public class YearDataModel implements ProgressEmitter {
 
     //donnees mis en cache
     private final List<SchoolYear> years = new ArrayList<>();
+    private final List<StudyFeesConfig> studyFeesConfigs = new ArrayList<>();
+    private final List<PromotionStudyFees> promotionStudyFees = new ArrayList<>();
+    private final List<RelatedFeesConfig> relatedFeesConfigs = new ArrayList<>();
     private final List<Promotion> promotions = new ArrayList<>();//liste des promotions d'une année
     private final List<School> schools = new ArrayList<>();//liste des écoles pour une année
     private final List<Inscription> inscriptions = new ArrayList<>();//Liste des élèves inscrits pour l'année en cours de consultation
@@ -242,6 +245,52 @@ public class YearDataModel implements ProgressEmitter {
 
         int count = ps.size();
         return ps.toArray(new Promotion[count]);
+    }
+
+    /**
+     * Renvoie la configuration des frais d'études pour l'école en paramètre
+     */
+    public StudyFeesConfig [] getStudyFeesConfigs (School school) {
+        List<StudyFeesConfig> configs = new ArrayList<>();
+
+        for (StudyFeesConfig c : studyFeesConfigs)
+            if (c.getSchool().equals(school))
+                configs.add(c);
+
+        if (configs.isEmpty())
+            return null;
+
+        int size = configs.size();
+        return configs.toArray(new StudyFeesConfig[size]);
+    }
+
+
+    /**
+     * Renvoie lq configuration des frais d'étude pour l'année scolaire en cours de consultation
+     */
+    public StudyFeesConfig [] getStudyFeesConfigs () {
+        if (studyFeesConfigs.isEmpty())
+            return null;
+
+        int size = studyFeesConfigs.size();
+        return studyFeesConfigs.toArray(new StudyFeesConfig[size]);
+    }
+
+    /**
+     * Renvoie la liste des configs des frais d'étude associé à une promotion
+     */
+    public PromotionStudyFees [] getStudyFeesConfigs (Promotion promotion) {
+        List<PromotionStudyFees> configs = new ArrayList<>();
+
+        for (PromotionStudyFees pf : promotionStudyFees)
+            if (pf.getPromotion().equals(promotion))
+                configs.add(pf);
+
+        if (configs.isEmpty())
+            return null;
+
+        int size = configs.size();
+        return configs.toArray(new PromotionStudyFees[size]);
     }
 
     /**
