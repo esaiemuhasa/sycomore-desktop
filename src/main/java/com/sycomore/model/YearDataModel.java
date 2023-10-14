@@ -53,6 +53,8 @@ public class YearDataModel implements ProgressEmitter {
                         schools.clear();
                         getSchools();
                     }
+
+                    firePromotionTreeChange();
                 }
             }
 
@@ -71,6 +73,7 @@ public class YearDataModel implements ProgressEmitter {
                 }
 
                 getSchools();
+                firePromotionTreeChange();
             }
         });
 
@@ -309,6 +312,20 @@ public class YearDataModel implements ProgressEmitter {
         for (Object ls : listeners)
             ((YearDataModelListener) ls).onSetup();
     }
+
+    protected void firePromotionTreeChange() {
+        Object [] listeners = yearDataModelListeners.toArray();
+
+        int size = promotions.size();
+        if (size != 0) {
+            Promotion [] ps = promotions.toArray(new Promotion[size]);
+            for (Object ls : listeners)
+                ((YearDataModelListener) ls).onPromotionTreeChange(ps);
+        } else
+            for (Object ls : listeners)
+                ((YearDataModelListener) ls).onPromotionTreeChange();
+    }
+
 
     public void addYearDataListener (YearDataModelListener listener) {
         if (!yearDataModelListeners.contains(listener))

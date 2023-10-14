@@ -56,7 +56,10 @@ public class ClassifiableForm <T extends Classifiable> extends JPanel {
             String shortName = shortNameWrapper.getField().getText();
             String fullName = fullNameWrapper.getField().getText();
 
-            formListener.onValidate(shortName, fullName, data);
+            T d = data;
+            data = null;
+
+            formListener.onValidate(shortName, fullName, d);
             razFields();
         });
 

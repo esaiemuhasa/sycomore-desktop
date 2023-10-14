@@ -8,9 +8,15 @@ import com.sycomore.model.LevelTableModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Date;
 
 public class LevelsPanel extends JPanel {
+
+    private final JPopupMenu menu = new JPopupMenu();
+    private final JMenuItem itemDelete = new JMenuItem("Supprimer");
+    private final JMenuItem itemUpdate = new JMenuItem("Modifier");
 
     private final LevelTableModel tableModel = new LevelTableModel();
     private final JTable table = new JTable(tableModel);
@@ -49,11 +55,49 @@ public class LevelsPanel extends JPanel {
         add(header, BorderLayout.NORTH);
         add(table, BorderLayout.CENTER);
 
+        menu.add(itemUpdate);
+        menu.add(itemDelete);
+
         buttonAddingLevel.addActionListener(e -> {
             buildDialog();
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
         });
+
+        itemUpdate.addActionListener(e -> handleUpdate());
+        itemDelete.addActionListener(e -> handleDelete());
+
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger() && table.getSelectedRow() != -1)
+                    menu.show(table, e.getX(), e.getY());
+            }
+        });
+    }
+
+    private Level getSelectedItem () {
+        return tableModel.getRow(table.getSelectedRow());
+    }
+
+    private void handleDelete () {
+        Level level = getSelectedItem();
+        int status = JOptionPane.showConfirmDialog(this, "Voulez-vous vraiment supprimer \n "+level, "Suppression", JOptionPane.OK_CANCEL_OPTION);
+
+        if (status == JOptionPane.OK_OPTION) {
+            levelRepository.remove(level);
+        }
+    }
+    private void handleUpdate () {
+
+        Level level = getSelectedItem();
+
+        buildDialog();
+        classifiableForm.setData(level);
+
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
     private final ClassifiableForm.ClassifiableFormListener formListener = new ClassifiableForm.ClassifiableFormListener() {
