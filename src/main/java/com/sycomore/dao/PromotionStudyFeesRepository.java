@@ -2,8 +2,11 @@ package com.sycomore.dao;
 
 import com.sycomore.entity.Promotion;
 import com.sycomore.entity.PromotionStudyFees;
+import com.sycomore.entity.SchoolYear;
+import com.sycomore.entity.StudyFeesConfig;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -33,6 +36,22 @@ public class PromotionStudyFeesRepository extends BaseRepositoryJPA<PromotionStu
         List<PromotionStudyFees> list = query.getResultList();
         if (list == null || list.isEmpty())
             return null;
+        return list.toArray(createArray(list.size()));
+    }
+
+    /**
+     * Selection des configurations des frais scolaires pour une année scolaire.
+     */
+    public PromotionStudyFees [] findAllByYear (SchoolYear year) {
+        EntityManager manager = getManager();
+        TypedQuery<PromotionStudyFees> query = manager.createQuery("SELECT s FROM "+getEntityClass().getSimpleName()
+                +" s INNER JOIN s.promotion p WHERE p.year = :year", getEntityClass());
+        query.setParameter("year", year);
+
+        List<PromotionStudyFees> list = query.getResultList();
+        if (list.isEmpty())
+            return null;
+
         return list.toArray(createArray(list.size()));
     }
 }

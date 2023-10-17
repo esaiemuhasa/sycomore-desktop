@@ -4,6 +4,7 @@ import com.sycomore.dao.DAOFactory;
 import com.sycomore.dao.PromotionStudyFeesRepository;
 import com.sycomore.dao.RepositoryAdapter;
 import com.sycomore.dao.StudyFeesConfigRepository;
+import com.sycomore.entity.Promotion;
 import com.sycomore.entity.PromotionStudyFees;
 import com.sycomore.entity.School;
 import com.sycomore.entity.StudyFeesConfig;
@@ -14,6 +15,7 @@ import com.sycomore.view.MainWindow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
@@ -34,11 +36,15 @@ public class StudyFeesPanel extends JPanel {
     private final JButton buttonAddingPromotion = new JButton("Associer d'autre(s) promotion(s)");
 
     private final JPopupMenu configPopup = new JPopupMenu();
+    private final JPopupMenu promotionPopup = new JPopupMenu();
     private final JMenuItem itemDeleteConfig = new JMenuItem("Supprimer");
     private final JMenuItem itemUpdateConfig = new JMenuItem("Modifier");
+    private final JMenuItem itemDeletePromotion = new JMenuItem("Détacher la promotion");
 
     private JDialog configDialog;
     private StudyFeesConfigForm configForm;
+    private JDialog promotionDialog;
+    private PromotionStudyFeesForm promotionStudyFeesForm;
 
     private final YearDataModel dataModel;
     private final StudyFeesConfigRepository studyFeesConfigRepository;
@@ -125,14 +131,33 @@ public class StudyFeesPanel extends JPanel {
         configPopup.add(itemUpdateConfig);
         configPopup.add(itemDeleteConfig);
 
+        promotionPopup.add(itemDeletePromotion);
+
         buttonAddingConfig.addActionListener(e -> handleAddingConfiguration());
+        buttonAddingPromotion.addActionListener(e -> handleAddPromotion());
         itemUpdateConfig.addActionListener(e -> handleUpdateConfiguration());
+        itemDeletePromotion.addActionListener(e -> handleDeletePromotion());
+
         listConfig.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (listConfig.getSelectedIndex() != -1 && e.isPopupTrigger())
                     configPopup.show(listConfig, e.getX(), e.getY());
             }
+        });
+
+        listPromotion.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger() && listPromotion.getSelectedIndex() != -1)
+                    promotionPopup.show(listPromotion, e.getX(), e.getY());
+            }
+        });
+
+        listConfig.addListSelectionListener(event -> reloadPromotions());
+        comboBox.addItemListener(event -> {
+            if (event.getStateChange() == ItemEvent.SELECTED)
+                loadConfigs();
         });
     }
 
@@ -144,10 +169,54 @@ public class StudyFeesPanel extends JPanel {
 
         for (School s : schools)
             comboBoxModel.addElement(s);
+
+        loadConfigs();
+    }
+
+    /**
+     * Rechargement des donnees du model du JList visualisant la liste des configurations des frais scolaire
+     * d'une école.
+     */
+    private void loadConfigs () {
+        listModelConfig.removeAllElements();
+        School school = comboBoxModel.getElementAt(comboBox.getSelectedIndex());
+        StudyFeesConfig [] configs = dataModel.getStudyFeesConfigs(school);
+
+        if (configs != null) {
+            for (StudyFeesConfig c: configs)
+                listModelConfig.addElement(c);
+
+            listConfig.setSelectedIndex(0);
+        }
+    }
+
+    /**
+     * Rechargement des elements du model du JList visualisant la liste des promotions associé aux frais scolaire
+     */
+    private void reloadPromotions () {
+        listModelPromotion.removeAllElements();
+        StudyFeesConfig config = getSelectedConfig();
+
+        if (config == null)
+            return;
+
+        PromotionStudyFees [] fees = dataModel.getPromotionStudyFees(config);
+        if (fees == null)
+            return;
+
+        for (PromotionStudyFees f : fees)
+            listModelPromotion.addElement(f);
     }
 
     private StudyFeesConfig getSelectedConfig () {
-        return listModelConfig.getElementAt(listConfig.getSelectedIndex());
+        int index = listConfig.getSelectedIndex();
+        if (index == -1 && !listModelConfig.isEmpty())
+            index = 0;
+
+        if (index == -1)
+            return null;
+
+        return listModelConfig.getElementAt(index);
     }
 
     private void handleAddingConfiguration () {
@@ -168,6 +237,29 @@ public class StudyFeesPanel extends JPanel {
         configDialog.setVisible(true);
     }
 
+    private void handleAddPromotion () {
+        buildPromotionDialog();
+
+        StudyFeesConfig config = getSelectedConfig();
+        promotionDialog.setLocationRelativeTo(promotionDialog.getOwner());
+        promotionStudyFeesForm.setConfig(config);
+        promotionDialog.setVisible(true);
+    }
+
+    private void handleDeletePromotion () {
+        StudyFeesConfig config = getSelectedConfig();
+        PromotionStudyFees p = listModelPromotion.getElementAt(listPromotion.getSelectedIndex());
+
+        assert config != null;
+
+        int status = JOptionPane.showConfirmDialog(this, "Voulez-vous vraiment détacher la promotion "+p.getPromotion().toString()
+                +" du "+config.getAmount()+" USD ("+config.getCaption()+")", "Détachement de la promotion", JOptionPane.OK_CANCEL_OPTION);
+
+        if (status == JOptionPane.OK_OPTION) {
+            promotionStudyFeesRepository.remove(p);
+        }
+    }
+
     private void buildConfigDialog () {
         if (configDialog != null)
             return;
@@ -180,6 +272,24 @@ public class StudyFeesPanel extends JPanel {
         configDialog.setSize(configDialog.getWidth() + 200, configDialog.getHeight());
         configDialog.setResizable(false);
         configDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    }
+
+    /**
+     * Utilitaire de chargement de la boite de dialogue permettant l'association des promotions
+     * aux frais scolaires.
+     */
+    private void buildPromotionDialog () {
+        if (promotionDialog != null)
+            return;
+
+        promotionDialog = new JDialog(MainWindow.getInstance());
+        promotionStudyFeesForm = new PromotionStudyFeesForm(promotionStudyFeesFormListener);
+        promotionDialog.setContentPane(promotionStudyFeesForm);
+        promotionDialog.setTitle("Ajout des promotions au frais d'étude");
+
+        promotionDialog.pack();
+        promotionDialog.setSize(promotionDialog.getWidth() + 150, promotionDialog.getHeight());
+        promotionDialog.setResizable(false);
     }
 
     protected final YearDataModelListener dataModelListener = new YearDataModelAdapter() {
@@ -217,6 +327,29 @@ public class StudyFeesPanel extends JPanel {
         public void onCancel() {
             configDialog.setVisible(false);
             configDialog.dispose();
+        }
+    };
+
+    protected final PromotionStudyFeesForm.PromotionStudyFeesFormListener promotionStudyFeesFormListener = new PromotionStudyFeesForm.PromotionStudyFeesFormListener() {
+        @Override
+        public void onValidate(Promotion[] promotions, StudyFeesConfig config) {
+            onCancel();
+
+            for (Promotion p : promotions) {
+                PromotionStudyFees fees = new PromotionStudyFees();
+
+                fees.setConfig(config);
+                fees.setPromotion(p);
+                fees.setRecordingDate(new Date());
+
+                promotionStudyFeesRepository.persist(fees);
+            }
+        }
+
+        @Override
+        public void onCancel() {
+            promotionDialog.setVisible(false);
+            promotionDialog.dispose();
         }
     };
 

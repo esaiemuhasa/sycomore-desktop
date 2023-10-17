@@ -27,6 +27,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:mariadb://localhost:3307/sycomore_dev"/>
             <property name="javax.persistence.jdbc.user" value="sycomore"/>
             <property name="javax.persistence.jdbc.password" value="sycomore_school"/>
+            <property name="hibernate.show_sql" value="true"/>
             <property name="javax.persistence.schema-generation.database.action" value="none"/><!-- drop-and-create, create, update, none -->
         </properties>
     </persistence-unit>

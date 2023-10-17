@@ -40,11 +40,15 @@ public class YearDataModel implements ProgressEmitter {
     private final SchoolRepository schoolRepository;
 
     private final PromotionRepository promotionRepository;
+    private final StudyFeesConfigRepository studyFeesConfigRepository;
+    private final PromotionStudyFeesRepository promotionStudyFeesRepository;
 
     private YearDataModel () {
         yearRepository = DAOFactory.getInstance(SchoolYearRepository.class);
         schoolRepository = DAOFactory.getInstance(SchoolRepository.class);
         promotionRepository = DAOFactory.getInstance(PromotionRepository.class);
+        studyFeesConfigRepository = DAOFactory.getInstance(StudyFeesConfigRepository.class);
+        promotionStudyFeesRepository = DAOFactory.getInstance(PromotionStudyFeesRepository.class);
 
         promotionRepository.addRepositoryListener(new RepositoryAdapter<Promotion>() {
             @Override
@@ -110,6 +114,60 @@ public class YearDataModel implements ProgressEmitter {
                         setYear(current);
                     }
                 }
+            }
+        });
+
+        studyFeesConfigRepository.addRepositoryListener(new RepositoryAdapter<StudyFeesConfig>() {
+            @Override
+            public void onCreate(StudyFeesConfig config) {
+                if (config.getYear().equals(year))
+                    studyFeesConfigs.add(config);
+            }
+
+            @Override
+            public void onUpdate(StudyFeesConfig oldState, StudyFeesConfig newState) {
+                if (!newState.getYear().equals(year))
+                    return;
+
+                for (int i = 0; i < studyFeesConfigs.size(); i++) {
+                    if (newState.equals(studyFeesConfigs.get(i))) {
+                        studyFeesConfigs.set(i, newState);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onDelete(StudyFeesConfig config) {
+                if (!config.getYear().equals(year))
+                    return;
+
+                for (int i = 0; i < studyFeesConfigs.size(); i++) {
+                    if (config.equals(studyFeesConfigs.get(i))) {
+                        studyFeesConfigs.remove(i);
+                        break;
+                    }
+                }
+            }
+        });
+
+        promotionStudyFeesRepository.addRepositoryListener(new RepositoryAdapter<PromotionStudyFees>() {
+            @Override
+            public void onCreate(PromotionStudyFees p) {
+                if (p.getPromotion().getYear().equals(year))
+                    promotionStudyFees.add(p);
+            }
+
+            @Override
+            public void onDelete(PromotionStudyFees p) {
+                if (!p.getPromotion().getYear().equals(year))
+                    return;
+
+                for (int i = 0; i < promotionStudyFees.size(); i++)
+                    if (promotionStudyFees.get(i).equals(p)){
+                        promotionStudyFees.remove(i);
+                        break;
+                    }
             }
         });
     }
@@ -248,6 +306,24 @@ public class YearDataModel implements ProgressEmitter {
     }
 
     /**
+     * Recuperation de la liste des promotions, associer a une configuration des frais.
+     */
+    public Promotion [] getPromotions (StudyFeesConfig config) {
+        List<Promotion> ps = new ArrayList<>();
+
+        for (PromotionStudyFees p : promotionStudyFees) {
+            if (p.getConfig().equals(config))
+                ps.add(p.getPromotion());
+        }
+
+        if (ps.isEmpty())
+            return null;
+
+        int count = ps.size();
+        return ps.toArray(new Promotion[count]);
+    }
+
+    /**
      * Renvoie la configuration des frais d'études pour l'école en paramètre
      */
     public StudyFeesConfig [] getStudyFeesConfigs (School school) {
@@ -279,11 +355,25 @@ public class YearDataModel implements ProgressEmitter {
     /**
      * Renvoie la liste des configs des frais d'étude associé à une promotion
      */
-    public PromotionStudyFees [] getStudyFeesConfigs (Promotion promotion) {
+    public PromotionStudyFees [] getPromotionStudyFees (Promotion promotion) {
         List<PromotionStudyFees> configs = new ArrayList<>();
 
         for (PromotionStudyFees pf : promotionStudyFees)
             if (pf.getPromotion().equals(promotion))
+                configs.add(pf);
+
+        if (configs.isEmpty())
+            return null;
+
+        int size = configs.size();
+        return configs.toArray(new PromotionStudyFees[size]);
+    }
+
+    public PromotionStudyFees [] getPromotionStudyFees (StudyFeesConfig config) {
+        List<PromotionStudyFees> configs = new ArrayList<>();
+
+        for (PromotionStudyFees pf : promotionStudyFees)
+            if (pf.getConfig().equals(config))
                 configs.add(pf);
 
         if (configs.isEmpty())
@@ -316,6 +406,7 @@ public class YearDataModel implements ProgressEmitter {
      */
     private synchronized void doReload () {
         promotions.clear();
+        promotionStudyFees.clear();
         schools.clear();
 
         fireLoadStart();
@@ -323,6 +414,14 @@ public class YearDataModel implements ProgressEmitter {
         Promotion [] ps = promotionRepository.findAllByYear(getYear());
         if (ps != null)
             promotions.addAll(Arrays.asList(ps));
+
+        StudyFeesConfig [] configs = studyFeesConfigRepository.findAllByYear(year);
+        if (configs!= null)
+            studyFeesConfigs.addAll(Arrays.asList(configs));
+
+        PromotionStudyFees [] fees = promotionStudyFeesRepository.findAllByYear(year);
+        if (fees != null)
+            promotionStudyFees.addAll(Arrays.asList(fees));
 
         fireLoadFinish();
     }
