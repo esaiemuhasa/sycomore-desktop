@@ -3,6 +3,8 @@ package com.sycomore.view.workspace.students;
 import com.sycomore.entity.School;
 import com.sycomore.model.YearDataModel;
 import com.sycomore.model.YearDataModelAdapter;
+import com.sycomore.model.tree.SchoolTreeModel;
+import com.sycomore.model.tree.SchoolsTreeModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +14,12 @@ public class Sidebar extends JPanel {
 
     private final YearDataModel yearDataModel;
     private final Header header = new Header();
+    private final Container container = new Container();
 
     public Sidebar() {
         super(new BorderLayout(10, 10));
 
         yearDataModel = YearDataModel.getInstance();
-        Container container = new Container();
 
         add(header, BorderLayout.NORTH);
         add(container, BorderLayout.CENTER);
@@ -92,19 +94,46 @@ public class Sidebar extends JPanel {
 
         private void initEvents () {
             filterBySchools.addActionListener(e -> {
-                schoolComboBox.setEnabled(filterBySchools.isSelected());
+                boolean filter = filterBySchools.isSelected();
+                schoolComboBox.setEnabled(filter);
+
+                if (filter) {
+                    School school = schoolComboBoxModel.getElementAt(schoolComboBox.getSelectedIndex());
+                    container.setSchool(school);
+                } else
+                    container.setSchool(null);
             });
+
             schoolComboBox.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.DESELECTED)
                     return;
 
+                School school = (School) e.getItem();
+                container.setSchool(school);
             });
         }
     }
 
     private static class Container extends JPanel {
+
+        private final SchoolTreeModel schoolTreeModel = new SchoolTreeModel();
+        private final SchoolsTreeModel schoolsTreeModel = new SchoolsTreeModel();
+        private final JTree tree = new JTree(schoolTreeModel);
+
         public Container() {
             super(new BorderLayout());
+
+            add(new JScrollPane(tree), BorderLayout.CENTER);
+            tree.setRootVisible(false);
+        }
+
+        public void setSchool (School school) {
+            if (school != null) {
+                schoolTreeModel.setSchool(school);
+                tree.setModel(schoolTreeModel);
+            } else {
+                tree.setModel(schoolsTreeModel);
+            }
         }
     }
 }

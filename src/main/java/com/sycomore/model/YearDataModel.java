@@ -278,6 +278,60 @@ public class YearDataModel implements ProgressEmitter {
     }
 
     /**
+     * Recuperation de la liste des sections prise en charge pour l'école en paramètre
+     */
+    public Section [] getSections (School school) {
+        List<Section> sections = new ArrayList<>();
+
+        for (Promotion p : promotions)
+            if (p.getSchool().equals(school) && p.getOption() != null) {
+                boolean exist = false;
+                for (Section s : sections) {
+                    if (s.equals(p.getOption().getSection())) {
+                        exist = true;
+                        break;
+                    }
+                }
+
+                if (!exist)
+                    sections.add(p.getOption().getSection());
+            }
+
+        if (sections.isEmpty())
+            return null;
+
+        int count = sections.size();
+        return sections.toArray(new Section[count]);
+    }
+
+    /**
+     * Recuperation de la liste des options de l'école.
+     */
+    public Option [] getOptions (Section section, School school) {
+        List<Option> options = new ArrayList<>();
+
+        for (Promotion p : promotions)
+            if (p.getSchool().equals(school) && p.getOption() != null) {
+                boolean exist = false;
+                for (Option s : options) {
+                    if (s.equals(p.getOption())) {
+                        exist = true;
+                        break;
+                    }
+                }
+
+                if (!exist)
+                    options.add(p.getOption());
+            }
+
+        if (options.isEmpty())
+            return null;
+
+        int count = options.size();
+        return options.toArray(new Option[count]);
+    }
+
+    /**
      * Recuperation de la liste des promotions d'une école pour une année
      */
     public Promotion [] getPromotions (School school) {
@@ -294,10 +348,10 @@ public class YearDataModel implements ProgressEmitter {
     /**
      * Filtrage des promotions d'une option
      */
-    public Promotion [] getPromotions (Option option) {
+    public Promotion [] getPromotions (Option option, School school) {
         List<Promotion> ps = new ArrayList<>();
         for (Promotion p : promotions) {
-            if (p.getOption().equals(option))
+            if (p.getOption() != null && p.getOption().equals(option) && p.getSchool().equals(school))
                 ps.add(p);
         }
 
