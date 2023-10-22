@@ -13,9 +13,15 @@ public class Toolbar extends JPanel {
     private final JButton buttonInscription = new JButton("Inscription");
     private final JTextField searchTextField = new JTextField();
 
+    private String searchLastData = "";
 
-    public Toolbar() {
+    private final ToolbarListener listener;
+
+
+    public Toolbar(ToolbarListener listener) {
         super(new BorderLayout());
+
+        this.listener = listener;
 
         setBackground(UIManager.getColor("border_color"));
 
@@ -31,6 +37,20 @@ public class Toolbar extends JPanel {
         box.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         add(box);
+        initEvents();
+    }
+
+    private void initEvents () {
+        buttonInscription.addActionListener(e -> listener.onInscriptionRequest());
+        searchTextField.addCaretListener( e -> {
+            String value = searchTextField.getText();
+
+            if (!value.trim().isEmpty() && !value.equals(searchLastData)) {
+                listener.onSearch(value);
+            }
+
+            searchLastData = value;
+        });
     }
 
     @Override
@@ -45,5 +65,21 @@ public class Toolbar extends JPanel {
         g.setColor(UIManager.getColor("border_color_d10"));
 
         g.drawLine(0, getHeight()-1, getWidth(), getHeight()-1);
+    }
+
+    /**
+     * Interface d'écoute des événements du toolbar
+     */
+    public interface ToolbarListener {
+
+        /**
+         * Lors de la demande d'insertion d'une nouvelle inscription
+         */
+        void onInscriptionRequest ();
+
+        /**
+         * Lors du changement du text, comme indice de recherche
+         */
+        void onSearch(String value);
     }
 }

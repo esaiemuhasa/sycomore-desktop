@@ -18,6 +18,12 @@ public class SchoolTreeNode extends DefaultMutableTreeNode {
         yearDataModel = YearDataModel.getInstance();
     }
 
+    public SchoolTreeNode(School school) {
+        super(school);
+        this.school = school;
+        yearDataModel = YearDataModel.getInstance();
+    }
+
 
     @Override
     public void setUserObject(Object userObject) {
@@ -25,10 +31,12 @@ public class SchoolTreeNode extends DefaultMutableTreeNode {
             throw new RuntimeException("only instance of "+School.class.getName()+" are supported");
 
         super.setUserObject(userObject);
-        setSchool(school);
+        setSchool((School) userObject);
     }
 
     public void setSchool(School school) {
+
+        userObject = school;
 
         if (school == null) {
             removeAllChildren();
@@ -38,9 +46,15 @@ public class SchoolTreeNode extends DefaultMutableTreeNode {
         if (school.equals(this.school))
             return;
 
-        removeAllChildren();
-
         this.school = school;
+        reload();
+    }
+
+    public void reload () {
+        removeAllChildren();
+        if (school == null)
+            return;
+
         Section [] sections = yearDataModel.getSections(school);
         if (sections != null) {
             for (Section s : sections) {
@@ -57,9 +71,5 @@ public class SchoolTreeNode extends DefaultMutableTreeNode {
                 }
             }
         }
-    }
-
-    private void reload () {
-
     }
 }

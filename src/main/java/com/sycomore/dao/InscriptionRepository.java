@@ -6,6 +6,7 @@ import com.sycomore.entity.SchoolYear;
 import com.sycomore.entity.Student;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -23,6 +24,29 @@ public class InscriptionRepository extends BaseRepositoryJPA<Inscription> {
     @Override
     protected Inscription[] createArray(int size) {
         return new Inscription[size];
+    }
+
+    @Override
+    public void persist(Inscription inscription) throws RuntimeException {
+        if (inscription.getId() != null) {
+            getFactory().getRepository(StudentRepository.class).persist(inscription.getStudent());
+            super.persist(inscription);
+        } else {
+            EntityManager manager = getManager();
+            EntityTransaction transaction = manager.getTransaction();
+            if (!transaction.isActive())
+                transaction.begin();
+
+            Student student = inscription.getStudent();
+            if (student.getId() == null)
+                manager.persist(student);
+
+            manager.persist(inscription);
+            manager.flush();
+            transaction.commit();
+
+            fireOnCreate(inscription);
+        }
     }
 
     /**
