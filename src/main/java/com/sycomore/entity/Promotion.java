@@ -96,6 +96,16 @@ public class Promotion extends PersistableEntity {
 
     @Override
     public String toString() {
-        return getShortName();
+        String name = getLevel().getShortName();
+
+        if (getCategory() != null) {
+            name += " - "+getCategory().getLabel();
+        }
+
+        if (getOption() != null) {
+            name += " "+getOption().getFullName();
+        }
+
+        return name;
     }
 }

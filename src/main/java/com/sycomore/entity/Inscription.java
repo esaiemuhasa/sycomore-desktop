@@ -14,6 +14,8 @@ public class Inscription extends PersistableEntity {
     @JoinColumn(nullable = false)
     private Promotion promotion;
 
+    private double totalPaid;
+
     public Student getStudent() {
         return student;
     }

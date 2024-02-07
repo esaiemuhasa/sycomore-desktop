@@ -3,7 +3,13 @@ package com.sycomore.view.workspace.students;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Conteneur des listes des étudiants, groupé par promotion
+ */
 public class StudentsDataViewContainer extends JPanel {
+    public StudentsDataViewContainer() {
+        super(new BorderLayout());
+    }
 
     @Override
     protected void paintChildren(Graphics graphics) {
