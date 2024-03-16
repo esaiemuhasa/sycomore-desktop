@@ -89,7 +89,11 @@ public class Config {
         return COLORS[index % (COLORS.length - 1)];
     }
 
-    public static final Color [] COLORS_ALPHA = new Color[] {
+    public static Color getAlphaColorAt (int index) {
+        return COLORS_ALPHA[index % (COLORS_ALPHA.length - 1)];
+    }
+
+    private static final Color [] COLORS_ALPHA = new Color[] {
             new Color(0x55FFCE30, true), new Color(0x55E83845, true), new Color(0x55E9889F, true),
             new Color(0x55746AB0, true), new Color(0x55288BA8, true), new Color(0x55FF88FF, true),
             new Color(0x555F7FF0, true), new Color(0x5590C86F, true), new Color(0x550756FF, true),
