@@ -11,16 +11,16 @@ import java.util.Objects;
  */
 public class DefaultCardModel <T extends Number> implements CardModel <T> {
 	
-	private T value;
-	private String title = "";
-	private String icon;
-	private String info = "";
-	private String suffix="";
+	protected T value;
+	protected String title = "";
+	protected String icon;
+	protected String info = "";
+	protected String suffix="";
 	
 	private final List<CardModelListener> listeners = new ArrayList<>();
 	
-	private Color backgroundColor = UIManager.getColor("Component.background2");
-	private Color foregroundColor = UIManager.getColor("Component.foreground");
+	protected Color backgroundColor = UIManager.getColor("Component.background2");
+	protected Color foregroundColor = UIManager.getColor("Component.foreground");
 	
 	public DefaultCardModel() {
 		super();

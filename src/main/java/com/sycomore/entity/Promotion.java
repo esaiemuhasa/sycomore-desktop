@@ -29,6 +29,9 @@ public class Promotion extends PersistableEntity {
     @Column(name = "total_study_fees", insertable = false, precision = 16, scale = 2)
     private Double totalStudyFees;//total des frais d'études que doivent payer les élèves d'une promotion
 
+    @Column(name = "inscriptions_count", insertable = false)
+    private Integer inscriptionsCount;//nombre des élèves inscrit dans une promotion
+
     public School getSchool() {
         return school;
     }
@@ -118,5 +121,13 @@ public class Promotion extends PersistableEntity {
 
     public void setTotalStudyFees(Double totalStudyFees) {
         this.totalStudyFees = totalStudyFees;
+    }
+
+    public Integer getInscriptionsCount() {
+        return inscriptionsCount;
+    }
+
+    public void setInscriptionsCount(Integer studentCount) {
+        this.inscriptionsCount = studentCount;
     }
 }

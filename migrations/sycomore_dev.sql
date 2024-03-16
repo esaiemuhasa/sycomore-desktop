@@ -137,14 +137,14 @@ CREATE TABLE IF NOT EXISTS `inscription` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `recording_date` datetime NOT NULL,
   `updating_date` datetime DEFAULT NULL,
-  `totalPaid` double NOT NULL,
+  `total_paid_cash` DECIMAL(16,2) DEFAULT NULL,
+  `total_related_fees` DECIMAL(16,2) DEFAULT NULL,
   `promotion_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK3r03n89wnptxyb9944hwtqys8` (`promotion_id`),
   KEY `FK7rmfqaksvrei8ecot3b73ovqj` (`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 -- --------------------------------------------------------
 
 --
@@ -198,6 +198,7 @@ CREATE TABLE IF NOT EXISTS `promotion` (
   `recording_date` datetime NOT NULL,
   `updating_date` datetime DEFAULT NULL,
   `total_study_fees` DECIMAL(16,2) NULL DEFAULT NULL,
+  `inscriptions_count` INT(11) NULL DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
   `level_id` int(11) NOT NULL,
   `option_id` int(11) DEFAULT NULL,

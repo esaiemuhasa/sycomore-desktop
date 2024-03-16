@@ -58,7 +58,7 @@ public class Sidebar extends JPanel {
         add(footer, BorderLayout.SOUTH);
 
         setOpaque(true);
-        setBackground(UIManager.getColor("sidebar_background"));
+        setBackground(UIManager.getColor("Sidebar.background"));
         header.setBackground(getBackground());
         container.setBackground(getBackground());
 
@@ -209,7 +209,7 @@ public class Sidebar extends JPanel {
 
         Graphics2D g = (Graphics2D) graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(UIManager.getColor("border_color"));
+        g.setColor(UIManager.getColor("Component.borderColor"));
         g.drawLine(getWidth() - 1, 0, getWidth()-1, getHeight());
     }
 

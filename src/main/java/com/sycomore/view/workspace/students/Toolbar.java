@@ -23,7 +23,7 @@ public class Toolbar extends JPanel {
 
         this.listener = listener;
 
-        setBackground(UIManager.getColor("border_color"));
+        //setBackground(UIManager.getColor("Component.borderColor"));
 
         Box  box = Box.createHorizontalBox();
 
@@ -62,7 +62,7 @@ public class Toolbar extends JPanel {
         Graphics2D g = (Graphics2D) graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g.setColor(UIManager.getColor("border_color_d10"));
+        g.setColor(UIManager.getColor("Component.borderColor"));
 
         g.drawLine(0, getHeight()-1, getWidth(), getHeight()-1);
     }

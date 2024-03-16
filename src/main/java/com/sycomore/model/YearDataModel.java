@@ -333,6 +333,14 @@ public class YearDataModel implements ProgressEmitter {
     }
 
     /**
+     * Renvoie la liste des promotions declaré pour une année scolaire.
+     */
+    public Promotion [] getPromotions () {
+        int count  = promotions.size();
+        return promotions.toArray(new Promotion[count]);
+    }
+
+    /**
      * Recuperation de la liste des promotions d'une école pour une année
      */
     public Promotion [] getPromotions (School school) {
@@ -474,6 +482,13 @@ public class YearDataModel implements ProgressEmitter {
 
         int count = is.size();
         return is.toArray(new Inscription[count]);
+    }
+
+    /**
+     * Renvoie le nombre des inscriptions pour l'année scolaire.
+     */
+    public int getInscriptionsCount () {
+        return inscriptions.size();
     }
 
     /**

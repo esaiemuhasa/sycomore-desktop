@@ -40,17 +40,17 @@ public class SidebarMoreOption extends JComponent {
         final int y = (h / 2) - 4;
 
         if (hovered) {
-            g.setColor(UIManager.getColor("border_color"));
+            g.setColor(UIManager.getColor("Component.borderColor"));
             g.fillRoundRect(5, 5, w - 11, h - 11, 20, 20);
         }
 
-        g.setColor(hovered ? UIManager.getColor("blue_bootstrap") : UIManager.getColor("foreground"));
+        g.setColor(hovered ? UIManager.getColor("Component.blueBootstrap") : UIManager.getColor("Component.foreground"));
         for (int i = 0; i < 3; i++) {
             int x = w / 4 + (space * i) - 4;
             g.fillRoundRect(x, y, 8, 8, 10, 10);
         }
 
-        g.setColor(UIManager.getColor("border_color").darker());
+        g.setColor(UIManager.getColor("Component.borderColor").darker());
         g.drawRoundRect(5, 5, w - 11, h - 11, 20, 20);
 
     }

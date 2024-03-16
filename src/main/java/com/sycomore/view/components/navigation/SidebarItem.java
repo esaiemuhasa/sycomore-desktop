@@ -65,13 +65,13 @@ public class SidebarItem extends JComponent {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 
-        g.setColor(UIManager.getColor("border_color"));
+        g.setColor(UIManager.getColor("Component.borderColor"));
         if (hovered || active)
             g.fillRoundRect(5, 5, getWidth() - 11, getHeight() - 11, 10, 10);
         else
             g.drawRoundRect(5, 5, getWidth() - 11, getHeight() - 11, 10, 10);
 
-        Color c = active ? UIManager.getColor("blue_bootstrap") : UIManager.getColor("sidebar_foreground");
+        Color c = active ? UIManager.getColor("Component.activeColor") : UIManager.getColor("Sidebar.foreground");
         g.setColor(c);
 
         if (active)

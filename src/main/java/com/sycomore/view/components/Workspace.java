@@ -15,6 +15,7 @@ public class Workspace extends JPanel {
     public Workspace () {
         super();
         setLayout(cardLayout);
+        setBackground(UIManager.getColor("Component.background"));
     }
 
     /**

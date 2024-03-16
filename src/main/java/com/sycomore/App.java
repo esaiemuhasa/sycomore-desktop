@@ -1,18 +1,12 @@
 package com.sycomore;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import com.sycomore.helper.Config;
 import com.sycomore.helper.StateChecker;
 import com.sycomore.model.YearDataModel;
 import com.sycomore.model.YearDataModelAdapter;
 import com.sycomore.model.YearDataModelListener;
 import com.sycomore.view.MainWindow;
 import com.sycomore.view.SplashWindow;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -24,16 +18,6 @@ public class App
 
         FlatLightLaf.registerCustomDefaultsSource("themes");
         FlatLightLaf.setup();
-
-        Map<String, String> colors = Config.formPropertiesFile("themes/ColorLight");
-        if (colors != null) {
-            Set<String> keys = colors.keySet();
-            for (String key : keys) {
-                int c = Integer.decode(colors.get(key));
-                Color color = new Color(c);
-                UIManager.put(key, color);
-            }
-        }
 
         YearDataModel model = YearDataModel.getInstance();
 
