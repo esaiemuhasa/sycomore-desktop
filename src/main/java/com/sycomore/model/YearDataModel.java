@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Utilitaire de mis memoire des touts les données relatifs a une année scolaire
+ * Utilitaire de mis memoire des touts les données relatifs a une année scolaire.
+ * Il s'agit du Model des données global pour une année scolaire en cours de consultation, enfin d'éviter de contacter à chaque instant la BDD.
  */
 public class YearDataModel implements ProgressEmitter {
 
@@ -22,9 +23,9 @@ public class YearDataModel implements ProgressEmitter {
     private final List<ProgressListener> progressListeners = new ArrayList<>();
     private final List<YearDataModelListener> yearDataModelListeners = new ArrayList<>();
 
-    private SchoolYear year;
+    private SchoolYear year;//année scolaire en cours de consultation
 
-    private Thread thread;
+    private Thread thread;//thread de chargement des données
 
     //donnees mis en cache
     private final List<SchoolYear> years = new ArrayList<>();
@@ -407,7 +408,7 @@ public class YearDataModel implements ProgressEmitter {
     }
 
     /**
-     * Renvoie la liste des configs des frais d'étude associé à une promotion
+     * Renvoie la liste des configs des frais d'étude associé à une promotion.
      */
     public PromotionStudyFees [] getPromotionStudyFees (Promotion promotion) {
         List<PromotionStudyFees> configs = new ArrayList<>();
@@ -423,6 +424,26 @@ public class YearDataModel implements ProgressEmitter {
         return configs.toArray(new PromotionStudyFees[size]);
     }
 
+    /**
+     * Renvoie la somme des frais d'études qui font reference à la promotion en paramètre.
+     */
+    public double getSumPromotionStudyFees (Promotion promotion) {
+        PromotionStudyFees [] fees = getPromotionStudyFees(promotion);
+        if (fees == null)
+            return 0;
+
+        double sum = 0;
+        for (PromotionStudyFees p : fees)
+            sum += p.getConfig().getAmount();
+
+        return sum;
+    }
+
+    /**
+     * Utilitaire de recuperation de la liste des associations des promotions à la config d'un frais d'études.
+     * @param config frais d'étude référencé.
+     * @return liste des index qui font référence à la config des frais d'étude en paramètre.
+     */
     public PromotionStudyFees [] getPromotionStudyFees (StudyFeesConfig config) {
         List<PromotionStudyFees> configs = new ArrayList<>();
 

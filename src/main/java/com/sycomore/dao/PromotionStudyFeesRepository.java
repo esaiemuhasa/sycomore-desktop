@@ -40,6 +40,21 @@ public class PromotionStudyFeesRepository extends BaseRepositoryJPA<PromotionStu
     }
 
     /**
+     * Somme des frais que doit payer une promotion.
+     */
+    public double sumAllByPromotion (Promotion promotion) {
+        EntityManager manager = getManager();
+        Query query = manager.createQuery("SELECT SUM(c.amount) AS cash FROM PromotionStudyFees p INNER JOIN p.config c WHERE p.promotion = :promotion");
+        query.setParameter("promotion", promotion);
+
+        Object sum = query.getSingleResult();
+        if (sum == null)
+            return 0;
+
+        return Double.parseDouble(sum.toString());
+    }
+
+    /**
      * Selection des configurations des frais scolaires pour une année scolaire.
      */
     public PromotionStudyFees [] findAllByYear (SchoolYear year) {

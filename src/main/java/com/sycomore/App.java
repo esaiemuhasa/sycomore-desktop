@@ -2,6 +2,7 @@ package com.sycomore;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.sycomore.helper.Config;
+import com.sycomore.helper.StateChecker;
 import com.sycomore.model.YearDataModel;
 import com.sycomore.model.YearDataModelAdapter;
 import com.sycomore.model.YearDataModelListener;
@@ -40,6 +41,7 @@ public class App
         splash.setVisible(true);
 
         MainWindow.setup();
+        StateChecker.setup();
 
         YearDataModelListener modelListener = new YearDataModelAdapter() {
             @Override

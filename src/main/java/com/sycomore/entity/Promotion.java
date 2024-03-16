@@ -19,12 +19,15 @@ public class Promotion extends PersistableEntity {
     private Level level;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false, updatable = false)
     private SchoolYear year;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn()
     private Category category;
+
+    @Column(name = "total_study_fees", insertable = false, precision = 16, scale = 2)
+    private Double totalStudyFees;//total des frais d'études que doivent payer les élèves d'une promotion
 
     public School getSchool() {
         return school;
@@ -107,5 +110,13 @@ public class Promotion extends PersistableEntity {
         }
 
         return name;
+    }
+
+    public Double getTotalStudyFees() {
+        return totalStudyFees;
+    }
+
+    public void setTotalStudyFees(Double totalStudyFees) {
+        this.totalStudyFees = totalStudyFees;
     }
 }

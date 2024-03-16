@@ -7,6 +7,11 @@ import com.sycomore.model.YearDataModel;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+
+/**
+ * Nœud de l'arbre de l'arbre pour la section de student, dans l'arbre de filtrage.
+ * Ce nœud représente une option d'une section de l'école.
+ */
 public class OptionTreeNode extends DefaultMutableTreeNode {
     private final Option option;
     private final School school;
