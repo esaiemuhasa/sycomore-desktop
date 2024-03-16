@@ -6,7 +6,7 @@ import com.sycomore.entity.Inscription;
 import com.sycomore.entity.Promotion;
 import com.sycomore.entity.Student;
 import com.sycomore.view.MainWindow;
-import com.sycomore.view.componets.Workspace;
+import com.sycomore.view.components.Workspace;
 import com.sycomore.view.workspace.students.InscriptionForm;
 import com.sycomore.view.workspace.students.Sidebar;
 import com.sycomore.view.workspace.students.StudentsDataViewContainer;

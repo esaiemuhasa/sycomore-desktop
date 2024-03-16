@@ -32,17 +32,20 @@ public final class StateChecker {
         promotionStudyFeesRepository.addRepositoryListener(new RepositoryAdapter<PromotionStudyFees>() {
             @Override
             public void onCreate(PromotionStudyFees promotionStudyFees) {
-                super.onCreate(promotionStudyFees);
+                revalidatePromotion(promotionStudyFees.getPromotion());
             }
 
             @Override
             public void onUpdate(PromotionStudyFees oldState, PromotionStudyFees newState) {
-                super.onUpdate(oldState, newState);
+                revalidatePromotion(oldState.getPromotion());
+                if (!oldState.getPromotion().equals(newState.getPromotion())) {
+                    revalidatePromotion(newState.getPromotion());
+                }
             }
 
             @Override
             public void onDelete(PromotionStudyFees promotionStudyFees) {
-                super.onDelete(promotionStudyFees);
+                revalidatePromotion(promotionStudyFees.getPromotion());
             }
         });
     }

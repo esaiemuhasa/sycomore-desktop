@@ -1,23 +1,31 @@
-package com.sycomore.view.componets;
+package com.sycomore.view.components;
+
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 
-public class ComboBoxWrapper <T> extends JPanel {
+public class DateFieldWrapper extends JPanel {
 
-    private final JComboBox<T> field;
+    private final JDateChooser field = new JDateChooser();
     private final JLabel label = new JLabel();
 
-    public ComboBoxWrapper() {
+    public DateFieldWrapper() {
         super(new BorderLayout());
-        field = new JComboBox<>();
         init();
     }
 
-    public ComboBoxWrapper(String label, ComboBoxModel<T> model) {
+    public DateFieldWrapper(String label) {
         super(new BorderLayout());
         this.label.setText(label);
-        this.field = new JComboBox<>(model);
+        init();
+    }
+
+    public DateFieldWrapper(String label, Date value) {
+        super(new BorderLayout());
+        this.label.setText(label);
+        this.field.setDate(value);
         init();
     }
 
@@ -28,7 +36,7 @@ public class ComboBoxWrapper <T> extends JPanel {
         field.setEnabled(enabled);
     }
 
-    public JComboBox<T> getField() {
+    public JDateChooser getField() {
         return field;
     }
 

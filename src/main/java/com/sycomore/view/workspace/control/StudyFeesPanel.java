@@ -325,6 +325,7 @@ public class StudyFeesPanel extends JPanel {
 
         @Override
         public void onCancel() {
+            configForm.setConfig(null);
             configDialog.setVisible(false);
             configDialog.dispose();
         }

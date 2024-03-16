@@ -6,11 +6,10 @@ import com.sycomore.dao.SchoolYearRepository;
 import com.sycomore.entity.SchoolYear;
 import com.sycomore.model.YearDataModel;
 import com.sycomore.model.YearDataModelAdapter;
-import com.sycomore.model.YearDataModelListener;
-import com.sycomore.view.componets.navigation.SidebarItem;
-import com.sycomore.view.componets.navigation.SidebarItemModel;
-import com.sycomore.view.componets.navigation.SidebarMoreOption;
-import com.sycomore.view.componets.navigation.SidebarMoreOptionListener;
+import com.sycomore.view.components.navigation.SidebarItem;
+import com.sycomore.view.components.navigation.SidebarItemModel;
+import com.sycomore.view.components.navigation.SidebarMoreOption;
+import com.sycomore.view.components.navigation.SidebarMoreOptionListener;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

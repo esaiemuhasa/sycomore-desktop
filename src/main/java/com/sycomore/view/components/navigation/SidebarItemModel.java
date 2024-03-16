@@ -1,4 +1,4 @@
-package com.sycomore.view.componets.navigation;
+package com.sycomore.view.components.navigation;
 
 public class SidebarItemModel {
     private final String caption;

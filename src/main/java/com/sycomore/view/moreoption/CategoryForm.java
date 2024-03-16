@@ -1,7 +1,7 @@
 package com.sycomore.view.moreoption;
 
 import com.sycomore.entity.Category;
-import com.sycomore.view.componets.TextFieldWrapper;
+import com.sycomore.view.components.TextFieldWrapper;
 
 import javax.swing.*;
 import java.awt.*;

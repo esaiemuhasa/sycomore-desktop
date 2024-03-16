@@ -1,4 +1,4 @@
-package com.sycomore.view.componets.navigation;
+package com.sycomore.view.components.navigation;
 
 import com.sycomore.entity.SchoolYear;
 

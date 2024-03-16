@@ -5,10 +5,9 @@ import com.sycomore.helper.Config;
 import com.sycomore.model.YearDataModel;
 import com.sycomore.model.YearDataModelAdapter;
 import com.sycomore.model.YearDataModelListener;
-import com.sycomore.view.componets.TextFieldWrapper;
-import com.sycomore.view.componets.Workspace;
-import com.sycomore.view.componets.navigation.SidebarItem;
-import com.sycomore.view.componets.navigation.SidebarMoreOptionListener;
+import com.sycomore.view.components.Workspace;
+import com.sycomore.view.components.navigation.SidebarItem;
+import com.sycomore.view.components.navigation.SidebarMoreOptionListener;
 import com.sycomore.view.moreoption.GlobalSettingDialog;
 import com.sycomore.view.moreoption.SchoolYearDialog;
 import com.sycomore.view.workspace.ControlPanel;
@@ -19,11 +18,8 @@ import com.sycomore.view.workspace.StudentsPanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 public class MainWindow extends JFrame {
 

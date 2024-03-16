@@ -5,7 +5,7 @@ import com.sycomore.dao.RepositoryAdapter;
 import com.sycomore.dao.SchoolYearRepository;
 import com.sycomore.entity.SchoolYear;
 import com.sycomore.view.MainWindow;
-import com.sycomore.view.componets.TextFieldWrapper;
+import com.sycomore.view.components.TextFieldWrapper;
 
 import javax.swing.*;
 import java.awt.*;

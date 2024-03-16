@@ -4,9 +4,9 @@ import com.sycomore.entity.Inscription;
 import com.sycomore.entity.Promotion;
 import com.sycomore.entity.School;
 import com.sycomore.model.YearDataModel;
-import com.sycomore.view.componets.ComboBoxWrapper;
-import com.sycomore.view.componets.DateFieldWrapper;
-import com.sycomore.view.componets.TextFieldWrapper;
+import com.sycomore.view.components.ComboBoxWrapper;
+import com.sycomore.view.components.DateFieldWrapper;
+import com.sycomore.view.components.TextFieldWrapper;
 
 import javax.swing.*;
 import java.awt.*;

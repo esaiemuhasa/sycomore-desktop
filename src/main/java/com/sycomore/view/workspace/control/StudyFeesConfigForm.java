@@ -1,8 +1,8 @@
 package com.sycomore.view.workspace.control;
 
 import com.sycomore.entity.StudyFeesConfig;
-import com.sycomore.view.componets.DateFieldWrapper;
-import com.sycomore.view.componets.TextFieldWrapper;
+import com.sycomore.view.components.DateFieldWrapper;
+import com.sycomore.view.components.TextFieldWrapper;
 
 import javax.swing.*;
 import java.awt.*;

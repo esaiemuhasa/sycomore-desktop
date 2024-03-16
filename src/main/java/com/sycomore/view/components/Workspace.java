@@ -1,4 +1,4 @@
-package com.sycomore.view.componets;
+package com.sycomore.view.components;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,6 @@
 package com.sycomore.view.workspace;
 
-import com.sycomore.view.componets.Workspace;
+import com.sycomore.view.components.Workspace;
 
 import javax.swing.*;
 import java.awt.*;
