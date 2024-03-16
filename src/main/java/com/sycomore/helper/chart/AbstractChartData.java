@@ -60,7 +60,7 @@ public abstract class AbstractChartData implements ChartData {
 	@Override
 	public void setForegroundColor(Color foregroundColor) {
 		Color old = this.foregroundColor;
-		if(this.foregroundColor.equals(foregroundColor)) 
+		if(old != null && this.foregroundColor.equals(foregroundColor))
 			return;
 		
 		this.foregroundColor = foregroundColor;
@@ -70,7 +70,7 @@ public abstract class AbstractChartData implements ChartData {
 	@Override
 	public void setBackgroundColor(Color backgroundColor) {
 		Color old = this.backgroundColor;
-		if(this.backgroundColor.equals(backgroundColor))
+		if(old != null && this.backgroundColor.equals(backgroundColor))
 			return;
 		
 		this.backgroundColor = backgroundColor;

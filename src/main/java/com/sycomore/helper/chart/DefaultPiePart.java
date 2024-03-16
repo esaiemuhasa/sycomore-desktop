@@ -78,7 +78,7 @@ public class DefaultPiePart extends AbstractChartData implements PiePart {
 
 	@Override
 	public void setBackgroundColor(Color backgroundColor) {
-		if(this.backgroundColor.equals(backgroundColor))
+		if(this.backgroundColor != null && this.backgroundColor.equals(backgroundColor))
 			return;
 		
 		super.setBackgroundColor(backgroundColor);
@@ -87,7 +87,7 @@ public class DefaultPiePart extends AbstractChartData implements PiePart {
 
 	@Override
 	public void setForegroundColor(Color foregroundColor) {
-		if(this.foregroundColor.equals(foregroundColor)) 
+		if(this.foregroundColor != null && this.foregroundColor.equals(foregroundColor))
 			return;
 		
 		super.setForegroundColor(foregroundColor);

@@ -4,7 +4,10 @@ package com.sycomore.view.workspace.control;
 import com.sycomore.dao.DAOFactory;
 import com.sycomore.dao.PromotionRepository;
 import com.sycomore.entity.Promotion;
+import com.sycomore.entity.PromotionStudyFees;
 import com.sycomore.entity.School;
+import com.sycomore.helper.Config;
+import com.sycomore.helper.chart.*;
 import com.sycomore.model.PromotionTableModel;
 import com.sycomore.model.YearDataModel;
 import com.sycomore.model.YearDataModelAdapter;
@@ -12,6 +15,7 @@ import com.sycomore.model.YearDataModelListener;
 import com.sycomore.view.MainWindow;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
@@ -27,6 +31,7 @@ public class PromotionsPanel extends JPanel {
     private final JMenuItem itemDelete = new JMenuItem("Supprimer");
 
     private final PromotionTableModel tableModel = new PromotionTableModel();
+    private final DefaultPieModel pieModel = new DefaultPieModel();
 
     private final PromotionRepository promotionRepository;
     private final YearDataModel dataModel;
@@ -45,13 +50,23 @@ public class PromotionsPanel extends JPanel {
 
     private void init () {
         Box header = Box.createHorizontalBox();
+        JPanel center = new JPanel(new BorderLayout(Config.DEFAULT_H_GAP, Config.DEFAULT_V_GAP));
+
+        PiePanel piePanel = new PiePanel(pieModel);
 
         header.add(comboBox);
         header.add(Box.createHorizontalGlue());
         header.add(buttonAdding);
 
+        pieModel.setSuffix(" $");
+        piePanel.setAlignment(PiePanel.Alignment.VERTICAL);
+        piePanel.setPreferredSize(new Dimension(450, 600));
+
+        center.add(new JScrollPane(table), BorderLayout.CENTER);
+        center.add(piePanel, BorderLayout.EAST);
+
         add(header, BorderLayout.NORTH);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        add(center, BorderLayout.CENTER);
 
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -65,16 +80,107 @@ public class PromotionsPanel extends JPanel {
 
             School school = boxModel.getElementAt(comboBox.getSelectedIndex());
             tableModel.setSchool(school);
+
+            if (tableModel.getRowCount() > 0) {
+                table.setRowSelectionInterval(0, 0);
+                doSelectPromotion();
+            }
+        });
+
+        tableModel.addTableModelListener(event -> {
+            if(event.getType() == TableModelEvent.UPDATE) {
+                doSelectPromotion();
+            }
         });
 
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                doSelectPromotion();
+            }
+
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.isPopupTrigger() && table.getSelectedRow() != -1)
                     menu.show(table, e.getX(), e.getY());
             }
         });
+    }
+
+    private void doSelectPromotion () {
+        int index = table.getSelectedRow();
+
+        if (index == -1)
+            return;
+
+        Promotion promotion = tableModel.getRow(index);
+        revalidatePieRender(promotion);
+    }
+
+    /**
+     * Action de revalidation du rendu du graphique de visualisation de la repartition des frais d'étude que doit payer une promotion.
+     */
+    public void revalidatePieRender (Promotion promotion) {
+
+        Promotion old = (Promotion) pieModel.getObject();
+        PromotionStudyFees[] fees = dataModel.getPromotionStudyFees(promotion);
+
+        pieModel.setTitle(String.format(" %s / %s", promotion.getSchool().toString(), promotion.toString()));
+
+
+        if (promotion.equals(old)) {//revalidation de parts
+            if (fees == null) {
+                pieModel.removeAll();
+                return;
+            }
+
+            for (int i = pieModel.getCountPart()-1; i >= 0 ; i--) {
+                PiePart part = pieModel.getPartAt(i);
+
+                boolean check = false;
+
+                for (PromotionStudyFees f : fees)
+                    if (f.equals(part.getData())) {
+                        part.setValue(f.getConfig().getAmount());
+                        part.setLabel(f.getConfig().getCaption());
+                        check = true;
+                        break;
+                    }
+
+                if (!check)
+                    pieModel.removePartAt(i);
+            }
+
+            //items à ajouter
+            for (PromotionStudyFees f : fees) {
+                PiePart part = pieModel.findByData(f);
+                if (part != null)
+                    continue;
+
+                pieModel.addPart(PiePartBuilder.build(pieModel.getCountPart(), f.getConfig().getAmount(), f.getConfig().getCaption()));
+            }
+
+            return;
+        } else {
+            pieModel.removeAll();
+        }
+
+        pieModel.setObject(promotion);
+        if (fees == null)
+            return;
+
+        PiePart[] parts = new PiePart[fees.length];
+
+        for (int i = 0; i < fees.length; i++) {
+            PromotionStudyFees f = fees[i];
+            PiePart part = PiePartBuilder.build(i,f.getConfig().getAmount(), f.getConfig().getCaption());
+            part.setData(f);
+            parts[i] = part;
+        }
+
+        pieModel.addParts(parts);
     }
 
     /**
