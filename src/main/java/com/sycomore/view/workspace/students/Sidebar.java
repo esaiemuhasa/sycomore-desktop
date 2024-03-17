@@ -10,6 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 
+/**
+ * Barre latérale de navigation de la section où la gestion des élèves est fait.
+ * Ladite barre de navigation affiche l'arbre des promotions, classée par école.
+ */
 public class Sidebar extends JPanel {
 
     private final YearDataModel yearDataModel;
@@ -36,7 +40,7 @@ public class Sidebar extends JPanel {
         Graphics2D g = (Graphics2D) graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g.setColor(UIManager.getColor("border_color"));
+        g.setColor(UIManager.getColor("Component.borderColor"));
 
         g.drawLine(0, 0, 0, getHeight());
     }
@@ -72,7 +76,7 @@ public class Sidebar extends JPanel {
 
             add(box, BorderLayout.CENTER);
 
-            setBackground(UIManager.getColor("border_color_l10"));
+            setBackground(UIManager.getColor("Component.borderColorL5"));
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
             initEvents();
@@ -114,6 +118,9 @@ public class Sidebar extends JPanel {
         }
     }
 
+    /**
+     * Contenur de de l'abre de filtrage des promotions
+     */
     private static class Container extends JPanel {
 
         private final SchoolTreeModel schoolTreeModel = new SchoolTreeModel();
