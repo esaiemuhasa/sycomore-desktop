@@ -351,6 +351,18 @@ CREATE TABLE IF NOT EXISTS `study_fees_config` (
   KEY `FKberxdtqae81beah9i7mg62234` (`school_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `parameter`(
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `recording_date` DATETIME NOT NULL,
+  `updating_date` DATETIME,
+  `caption` VARCHAR(255),
+  `parameter_name` VARCHAR(100) NOT NULL,
+  `parameter_value` LONGTEXT,
+  PRIMARY KEY(`id`)
+) ENGINE = InnoDB;
+
+alter table `parameter` add constraint `UK_4k29yjmei55adcktyda5409cj` unique (`parameter_name`);
+
 --
 -- Constraints for dumped tables
 --

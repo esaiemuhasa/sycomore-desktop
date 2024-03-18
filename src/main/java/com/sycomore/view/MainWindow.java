@@ -50,19 +50,17 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        //
+        //positionnement des conteneurs principaux de la fenêtre
         JPanel container = (JPanel) getContentPane();
         container.add(sidebar, BorderLayout.WEST);
         container.add(workspace, BorderLayout.CENTER);
-
-        init();
-
-        dataModel.addYearDataListener(dataModelListener);
     }
 
     public static MainWindow getInstance () {
-        if (instance == null)
+        if (instance == null) {
             instance = new MainWindow();
+            instance.init();
+        }
         return instance;
     }
 
@@ -71,10 +69,16 @@ public class MainWindow extends JFrame {
         window.setTitle(Config.get("app_name")+" - "+window.dataModel.getYear().getLabel()+" | "+title);
     }
 
+    /**
+     * Action de demande d'initialisation de la fenêtre principale du soft.
+     */
     public static void setup () {
         getInstance();
     }
 
+    /**
+     * Action de demande de chargement de la fenêtre de configuration des années scolaires
+     */
     private void buildSchoolYearDialog () {
         if (schoolYearDialog != null)
             return;
@@ -82,6 +86,9 @@ public class MainWindow extends JFrame {
         schoolYearDialog = new SchoolYearDialog(this);
     }
 
+    /**
+     * Action de chargement en memoire de la fenêtre de gestion des configurations globales
+     */
     private void buildGlobalSettingDialog () {
         if (globalSettingDialog != null)
             return;
@@ -89,11 +96,17 @@ public class MainWindow extends JFrame {
         globalSettingDialog = new GlobalSettingDialog(this);
     }
 
+    /**
+     * Action de feedback, lors du changément du ménu active sur la barre de menu principale.
+     */
     private void onSidebarItemChange (SidebarItem currentItem, SidebarItem oldItem) {
         updateTitle(currentItem.getItemModel().getCaption());
         workspace.showItem(currentItem.getItemModel().getName());
     }
 
+    /**
+     * Action d'initialisation de la fenêtre principale.
+     */
     private void init () {
         sidebar.addItem("états", "dashboard.png", "dashboard")
                 .addItem("Élèves", "student.png", "students")
@@ -108,6 +121,13 @@ public class MainWindow extends JFrame {
                 .addItem(new ControlPanel());
 
         sidebar.setMoreOptionListener(moreOptionListener);
+        dataModel.addYearDataListener(dataModelListener);
+
+        //Lors du changement d'etat de la fenêtre, on sauvegarde certaines informations
+        addWindowStateListener(e -> {
+            //System.out.println(">> "+getInsets());
+        });
+        //
     }
 
     private void doClosing () {
