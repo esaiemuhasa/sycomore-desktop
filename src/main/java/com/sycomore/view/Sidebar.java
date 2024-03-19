@@ -163,6 +163,20 @@ public class Sidebar extends JPanel {
         return currentItem;
     }
 
+    public void setCurrentItem(String name) {
+        Component [] components = container.getComponents();
+        for (Component c : components) {
+            if (!(c instanceof SidebarItem))
+                return;
+
+            SidebarItem item = (SidebarItem) c;
+            if (item.getItemModel().getName().equals(name)) {
+                onAction(item);
+                break;
+            }
+        }
+    }
+
     public void setItemChangeListener (SidebarItemChangeListener itemChangeListener) {
         this.itemChangeListener = itemChangeListener;
     }
@@ -174,6 +188,9 @@ public class Sidebar extends JPanel {
         header.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
+    /**
+     * Lors du click sur un item du menu de navigation
+     */
     private void onAction (SidebarItem item) {
         if (item == currentItem)
             return;

@@ -18,7 +18,7 @@ import javax.persistence.Table;
 public class Parameter extends PersistableEntity {
 
     public static final String PARAM_MAIN_WINDOW_INSET = "MAIN_WINDOW_INSET";
-    public static final String PARAM_MAIN_WINDOW_TYPE = "MAIN_WINDOW_TYPE";
+    public static final String PARAM_MAIN_WINDOW_ACTIVE_MAV_ITEM = "MAIN_WINDOW_ACTIVE_NAV_ITEM";
 
     @Column(name = "parameter_name", nullable = false, length = 100, unique = true)
     private String name;
